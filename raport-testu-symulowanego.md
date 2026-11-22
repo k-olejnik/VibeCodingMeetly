@@ -15,26 +15,19 @@
 | A3 zatwierdza „Przegląd gotowości pilotażu dostaw”, gdy brak tematów do wyjaśnienia. | Zaliczone. Pusta sekcja jest ukryta, a pozostała treść jest widoczna. |
 | Po ponownym otwarciu prototypu dane są dostępne. | Częściowo zweryfikowane. Raport opisuje częściową symulację zapisu w przeglądarce. |
 
-## Obserwacje i decyzje
+## Obserwacje z pierwszej symulacji i stan po poprawkach
 
-Zachowania porównano z [aktualną specyfikacją](SPEC.md) i [kartą F04](docs/funkcje/F04-widoki-wedlug-roli.md). Zgłoszony priorytet odzwierciedla ocenę w raporcie testera. Decyzje produktowe pozostają po stronie autorki.
+Symulacja odbyła się przed zmianami T2. Aktualne zasady opisują [SPEC.md](SPEC.md) i [karta F04](docs/funkcje/F04-widoki-wedlug-roli.md).
 
-| ID | Co zaobserwowano | Ocena względem bieżących wymagań | Dalsza decyzja |
-| --- | --- | --- | --- |
-| T2-01 | A3 z dostępem do spotkania może usunąć spotkanie prowadzone przez A1. Wynik i zadania znikają dla wszystkich kont w lokalnym prototypie. Tester ocenił to jako krytyczne. | Zachowanie zgodne z DEC-11 i F04-KA8. Każdy, kto widzi zatwierdzone spotkanie, ma prawo usunąć je dla wszystkich. Ostrzeżenie pokazuje skutek operacji. | Ryzyko przypadkowego usunięcia. Ewentualne ograniczenie do prowadzącego lub wybranych ról wymaga zmiany DEC-11. |
-| T2-02 | Gdy A3 traci dostęp do spotkania, przypisane mu zadanie pozostaje w zakładce „Zadania”. Tester ocenił to jako krytyczne. | Zachowanie zgodne z regułami F04. Dostęp do własnego zadania wynika z przypisania, a dostęp do wyniku spotkania z listy lub roli. Bez dostępu do spotkania API ma pominąć tytuł i odnośnik do źródła. Prototyp pokazuje treść, osobę odpowiedzialną i stan zadania, bez tytułu spotkania ani odnośnika. | Doprecyzować przed wdrożeniem, czy przy odebraniu dostępu autorka chce też cofać przypisania. Treść zadania może sama zawierać kontekst spotkania. |
-| T2-03 | A1 po zatwierdzeniu nie widzi zadania przekazanego A3 w szczegółach. Tester ocenił to jako problem UX o średnim priorytecie. | Zachowanie zgodne z US5/K2 i N1. Programista i analityk widzą własne zadania, a PM i dyrektor widzą wszystkie. | Propozycja UX do decyzji. Pełna lista w szczegółach dla prowadzącego wymaga wyjątku od N1. Zakładka „Zadania” może nadal pokazywać wyłącznie własne pozycje. |
-| T2-04 | Dane zapisują się w `localStorage`. Przełączenie konta demonstracyjnego działa w obrębie tej samej przeglądarki. | Ograniczenie prototypu HTML. Synchronizacja i rzeczywista autoryzacja są częścią docelowej aplikacji. | Doprecyzowano informację dla osoby otwierającej prototyp w README. |
-
-## Ustalenia po raporcie — 22 listopada 2026 r.
-
-- **T2-01.** Spotkanie może zainicjować każdy członek zespołu. Uczestnik z aktualnym dostępem może usunąć spotkanie dla wszystkich po potwierdzeniu. Nagranie źródłowe podlega osobnej retencji. Dopóki znajduje się na chronionym dysku, może posłużyć do ponownego importu. Prototyp symuluje usunięcie. Ponowny import opisano w specyfikacji integracji.
-- **T2-02.** Odebranie dostępu do spotkania ukrywa przypisane zadania pochodzące z niego w widokach tej osoby. Jawne usunięcie zadania przez PM albo jego wykonawcę z aktualnym dostępem powoduje jego zniknięcie z wszystkich profili i raportów. Wcześniejsze i nowsze zadanie można rozróżnić przez jawne usunięcie nieaktualnej pozycji.
-- **T2-03.** Osoba inicjująca widzi wszystkie zadania w szczegółach swojego spotkania, o ile nadal ma do niego dostęp. Na własnej liście widzi zadania przypisane do siebie.
-- **T2-04.** Zapis pozostaje lokalny w prototypie.
+| ID | Obserwacja w testowanej wersji | Stan aktualnego prototypu |
+| --- | --- | --- |
+| T2-01 | Osoba z dostępem do spotkania mogła usunąć je dla wszystkich. Tester wskazał ryzyko przypadkowego usunięcia. | Spotkanie może usunąć uczestnik z aktualnym dostępem, po potwierdzeniu. Ponowny import zachowanego nagrania po przypadkowym usunięciu jest opisany w specyfikacji integracji. |
+| T2-02 | Po odebraniu dostępu do spotkania przypisane zadanie było nadal widoczne. | Utrata dostępu ukrywa zadania ze spotkania dla tej osoby. PM lub wykonawca z aktualnym dostępem może usunąć pojedyncze zadanie dla wszystkich. Nowsze zadanie z kolejnego spotkania pozostaje osobnym rekordem. |
+| T2-03 | Inicjator po zatwierdzeniu nie widział zadania przekazanego innej osobie w szczegółach. | Inicjator z dostępem widzi wszystkie zadania w szczegółach własnego spotkania. Na swojej liście widzi przypisane mu zadania. |
+| T2-04 | Stan zapisywał się w `localStorage`. Przełączanie kont demonstracyjnych działało w tej samej przeglądarce. | Zapis lokalny pozostaje cechą prototypu HTML. Synchronizacja i rzeczywista autoryzacja należą do docelowej aplikacji. |
 
 ## Wniosek
 
-Główny scenariusz został zaliczony w symulacji. Zachowania opisane w T2-01–T2-03 odpowiadały wymaganiom na dzień testu. Powyższe ustalenia uwzględniono w kolejnej wersji specyfikacji i prototypu.
+Główna ścieżka została zaliczona w symulacji. Po zmianie zasad T2-01 do T2-03 sprawdzono logikę w JavaScript z atrapą DOM. Przypadki i wyniki są w [planie testu](plan-testu-element.md#weryfikacja-techniczna-prototypu).
 
 Przebieg nie potwierdza działania integracji z Element i AI, autoryzacji po stronie serwera, synchronizacji między urządzeniami ani użyteczności dla niezależnych użytkowników. [Plan testu z użytkownikami](plan-testu-element.md) pozostaje osobnym punktem weryfikacji.
