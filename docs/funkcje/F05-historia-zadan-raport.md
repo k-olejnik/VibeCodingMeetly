@@ -1,7 +1,7 @@
 # F05 · Historia zadań i raport tygodniowy
 
 **Status:** do zrobienia · **Priorytet:** MVP-1 · **Złożoność:** wysoka → poziom Wysoki — zmienia trwałe dane P2, wprowadza historię zmian i egzekwuje nowe uprawnienie PM.
-**Zależy od:** F04 · **Źródło:** DEC-10, A4, N7.
+**Zależy od:** F04 · **Źródło:** DEC-10, DEC-12, A4, N7.
 
 ## Do przeczytania
 
@@ -20,9 +20,11 @@ PM ma historię zadań oraz czytelny raport tygodniowy: co zostało zamknięte, 
 5. PM może dodać ręcznie wykonane zadanie: wpisuje treść, wybiera osobę odpowiedzialną i zapisuje je jako zamknięte. Zdarzenie zamknięcia trafia do raportu tygodniowego.
 6. Dyrektor może czytać E7, ale nie może dodawać ani zmieniać zadań. Pozostałe role nie mają dostępu do E7.
 
+7. PM może usunąć pojedyncze zatwierdzone zadanie w szczegółach spotkania po potwierdzeniu. Jeżeli późniejsze spotkanie zmieniło ustalenia, może jawnie usunąć wcześniejsze zadanie. Nowe zadanie pozostaje niezależnym rekordem.
+
 ## Dane
 
-Czyta Zadanie i Zmianę zadania. Tworzy ręczne Zadanie ze źródłem „dodane ręcznie przez PM” oraz Zmianę zadania. Modyfikuje wyłącznie aktualny stan Zadania. Raport jest wyliczany z historii, bez kopiowania do osobnej encji.
+Czyta Zadanie i Zmianę zadania. Tworzy ręczne Zadanie ze źródłem „dodane ręcznie przez PM” oraz Zmianę zadania. Zmiana stanu zapisuje historię. Usunięcie zadania usuwa również jego zdarzenia z historii i raportów. Raport jest wyliczany z historii, bez kopiowania do osobnej encji.
 
 ## Kryteria akceptacji
 
@@ -34,6 +36,8 @@ Czyta Zadanie i Zmianę zadania. Tworzy ręczne Zadanie ze źródłem „dodane 
 - F05-KA6 [test]: Gdy Programista A lub Analityk A spróbuje odczytać E7 albo Zmiany zadań, to nie otrzymuje danych; Dyrektor A widzi raport bez możliwości zmiany.
 
 - [test]: Po usunięciu spotkania raport i historia pomijają jego zadania oraz zdarzenia zmiany stanu. Ręcznie dodane zadanie PM jest nadal widoczne.
+
+- F05-KA7 [test, ręcznie]: Gdy istnieją wcześniejsze i nowsze zadanie, PM usuwa wcześniejsze i potwierdza. Wcześniejsza pozycja znika z list wszystkich osób, szczegółów spotkania i raportów, a nowsza pozostaje. Dyrektor, programista i analityk nie mogą wykonać tej operacji.
 
 ## Przypadki brzegowe i błędy
 

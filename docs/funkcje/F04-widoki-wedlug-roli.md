@@ -1,7 +1,7 @@
 # F04 · Widoki wyników zależne od roli
 
 **Status:** do zrobienia · **Priorytet:** MVP-1 · **Złożoność:** wysoka → poziom Wysoki — prezentuje dane P2 różnym rolom i musi egzekwować dostęp poza interfejsem.
-**Zależy od:** F01, F03 · **Źródło:** DEC-3, DEC-8, DEC-11, N1, N2.
+**Zależy od:** F01, F03 · **Źródło:** DEC-3, DEC-8, DEC-11, DEC-12, N1, N2.
 
 ## Do przeczytania
 
@@ -19,23 +19,27 @@ Każda osoba otrzymuje po zalogowaniu tylko taki zakres zatwierdzonych wyników 
 4. Widoki pokazują wyłącznie zatwierdzone wyniki; sesje „przetwarzanie”, „do zatwierdzenia” i „odrzucone” nie trafiają do historii innych osób.
 
 5. Historia spotkań na E2 pozwala wyszukać słowa w tytule i podsumowaniu, ustawić daty „Od” i „Do” oraz wybrać „Starsze niż” z liczbą i jednostką „dni”, „tygodnie” lub „miesiące”. Filtry łączą się i odnoszą daty do zakończenia spotkania.
-6. Meetly usuwa spotkanie oraz jego wynik po 6 miesiącach kalendarzowych od zakończenia. Każdy użytkownik z aktualnym prawem odczytu zatwierdzonego spotkania może je usunąć wcześniej. W obu przypadkach Meetly usuwa także zadania ze spotkania i historię ich zmian.
+6. Meetly usuwa spotkanie oraz jego wynik po 6 miesiącach kalendarzowych od zakończenia. Uczestnik z listy obecności przy „bot start” i z aktualnym dostępem może je usunąć wcześniej, po potwierdzeniu w oknie dialogowym. Sama rola PM lub dyrektora nie daje prawa do tej operacji. W obu przypadkach Meetly usuwa także zadania ze spotkania i historię ich zmian.
+
+7. Inicjator z dostępem widzi wszystkie zadania w szczegółach swojego spotkania. Zakładka „Zadania” programisty i analityka nadal pokazuje wyłącznie zadania przypisane do danego konta.
 
 ## Dane
 
-Czyta Wynik spotkania i Zadania. PM oraz dyrektor odczytują wszystkie zatwierdzone rekordy zespołu. Programista i analityk odczytują wyniki spotkań zgodnie z listą dostępu i wyłącznie własne zadania. Jeżeli widzą własne zadanie bez dostępu do spotkania, API pomija tytuł i odnośnik do spotkania. Reguła dostępu jest egzekwowana przez bazę lub serwer.
+Czyta Wynik spotkania i Zadania. PM oraz dyrektor odczytują wszystkie zatwierdzone rekordy zespołu. Programista i analityk odczytują wyniki spotkań zgodnie z listą dostępu oraz własne zadania. Wyjątek dla inicjatora dotyczy szczegółów jego spotkania, do którego ma dostęp. Jeżeli widzą własne zadanie bez dostępu do spotkania, API pomija tytuł i odnośnik do spotkania. Reguła dostępu jest egzekwowana przez bazę lub serwer.
 
 ## Kryteria akceptacji
 
 - F04-KA1 [test, ręcznie]: Gdy PM A albo Dyrektor A otworzy zatwierdzony wynik, to widzi pełny skrót, decyzje, tematy do wyjaśnienia oraz zadania przypisane do wszystkich osób z ich stanem.
 - F04-KA2 [test, ręcznie]: Gdy Programista A otworzy E2, to widzi swoje zadanie „Uzupełnij opis scenariusza logowania” ze stanem, ale nie widzi zadania Analityk A.
-- F04-KA3 [test]: Gdy Programista A spróbuje odczytać wynik spotkania bez dostępu albo zadanie Analityka A, serwer odrzuca żądanie. Po dodaniu dostępu wynik staje się widoczny, a po odebraniu znika z listy i bezpośredniego odczytu.
+- F04-KA3 [test]: Gdy Programista A spróbuje odczytać wynik spotkania bez dostępu lub cudze zadanie poza szczegółami zainicjowanego spotkania, serwer odrzuca żądanie. Po dodaniu dostępu wynik staje się widoczny, a po odebraniu znika z listy i bezpośredniego odczytu.
 - F04-KA4 [test]: Gdy Analityk A nie ma przypisanych zadań, to widzi stan pusty „Nie masz jeszcze zadań ze spotkań”, bez listy cudzych zadań.
-- F04-KA5 [test]: Gdy prowadzący nie zatwierdzi wyniku, to PM, dyrektor, programista i analityk nie widzą go w swoich widokach.
+- F04-KA5 [test]: Gdy inicjator nie zatwierdzi wyniku, to PM, dyrektor, programista i analityk nie widzą go w swoich widokach.
 
 - F04-KA6 [test]: Uczestnik z aktywnym dostępem, PM i dyrektor mogą zmieniać listę dostępu. Serwer odrzuca zmianę od osoby, której jedynie przyznano odczyt.
 - F04-KA7 [test, ręcznie]: Wyszukiwanie po słowach, obie granice daty oraz każda jednostka wieku działają osobno i łącznie. Spotkanie bez dostępu nie występuje w wynikach.
-- F04-KA8 [test]: Osoba z dostępem może usunąć zatwierdzone spotkanie także po ręcznym przyznaniu dostępu. Serwer odrzuca próbę usunięcia bez aktualnego dostępu. Po wcześniejszym usunięciu lub upływie 6 miesięcy spotkanie i wynik znikają z historii, wyszukiwania i odczytu bezpośredniego dla wszystkich ról.
+- F04-KA8 [test]: Uczestnik z aktualnym dostępem widzi „Usuń spotkanie”. Anulowanie zachowuje spotkanie i zadania, a potwierdzenie usuwa je dla wszystkich. Serwer odrzuca próbę usunięcia przez osobę spoza listy uczestników lub bez aktualnego dostępu. Po wcześniejszym usunięciu lub upływie 6 miesięcy spotkanie i wynik znikają z historii, wyszukiwania i odczytu bezpośredniego dla wszystkich ról.
+
+- F04-KA9 [test, ręcznie]: Gdy Programista A zainicjuje spotkanie i przypisze zadanie Analitykowi A, widzi je w szczegółach tego spotkania. Jego własna lista nie pokazuje zadania Analityka A. Analityk A widzi przypisane mu zadanie.
 
 ## Przypadki brzegowe i błędy
 

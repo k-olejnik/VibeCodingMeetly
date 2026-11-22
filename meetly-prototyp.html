@@ -254,7 +254,7 @@
       </div></section>
       <section data-panel="import" hidden><div class="card">
         <h2>Spotkania do zatwierdzenia</h2>
-        <p class="muted">Po zakończeniu nagrania bot automatycznie przekazuje transkrypcję i listę obecności z Element. Prowadzący widzi tutaj szkic, gdy import jest gotowy.</p>
+        <p class="muted">Po zakończeniu nagrania bot automatycznie przekazuje transkrypcję i listę obecności z Element. Osoba, która zainicjowała spotkanie, widzi tutaj szkic po zakończeniu importu.</p>
         <div id="importQueue"></div>
         <div id="draft" hidden>
           <div class="intro"><span class="status-pill">Do zatwierdzenia</span><h2 id="draftTitle"></h2><p id="draftParticipants"></p></div>
@@ -287,11 +287,11 @@
     </main>
     <footer>W prototypie integracja, AI i uprawnienia są symulowane. Dane są zapisywane w przeglądarce, jeśli pozwala na to jej konfiguracja.</footer>
   </div>
-  <dialog id="deleteDialog">
+  <dialog id="deleteDialog" aria-labelledby="deleteTitle" aria-describedby="deleteDescription">
     <form method="dialog">
-      <h2>Usunąć spotkanie dla wszystkich?</h2>
-      <p>Spotkanie, podsumowanie, zadania i historia ich zmian zostaną usunięte.</p>
-      <div class="actions"><button class="button secondary" value="cancel" autofocus>Anuluj</button><button class="button danger" value="delete">Usuń spotkanie</button></div>
+      <h2 id="deleteTitle"></h2>
+      <p id="deleteDescription"></p>
+      <div class="actions"><button class="button secondary" value="cancel" autofocus>Anuluj</button><button class="button danger" id="confirmDelete" value="delete"></button></div>
     </form>
   </dialog>
   <script>
@@ -344,9 +344,11 @@
     let selectedId = "";
     let draftId = "";
     let view = "overview";
+    let removalTarget = null;
     const privileged = () => account === "pm" || account === "director";
     const canRead = meeting => privileged() || meeting.access.includes(account);
     const canEditAccess = meeting => privileged() || (canRead(meeting) && meeting.participants.includes(account));
+    const canDeleteMeeting = meeting => canRead(meeting) && meeting.participants.includes(account);
     const visibleTasks = meeting => meeting.tasks.filter(task => privileged() || task.assignee === account);
     function persist() {
       try { localStorage.setItem(storageKey, JSON.stringify({meetings,queue})); } catch {}
@@ -484,8 +486,8 @@
       }).sort((a,b) => b.ended.localeCompare(a.ended));
       get("meetingList").innerHTML = meetingRows(results) || '<p class="empty">Brak spotkań spełniających filtry.</p>';
     }
-    function taskRows(rows) {
-      return rows.length ? '<ul>'+rows.map(task => '<li>'+escape(task.text)+' · '+escape(accounts[task.assignee])+' · '+(task.closed ? 'Zamknięte' : 'Otwarte')+'</li>').join("")+'</ul>' : '<p class="empty">Brak zadań.</p>';
+    function taskRows(rows, actions = () => "") {
+      return rows.length ? '<ul>'+rows.map((task, index) => '<li>'+escape(task.text)+' · '+escape(accounts[task.assignee])+' · '+(task.closed ? 'Zamknięte' : 'Otwarte')+actions(index)+'</li>').join("")+'</ul>' : '<p class="empty">Brak zadań.</p>';
     }
     function renderTasks() {
       get("taskList").innerHTML = taskRows(meetings.flatMap(visibleTasks));
@@ -503,9 +505,26 @@
         taskRows(tasks.filter(task => task.closed && task.closed >= dateKey(start) && task.closed <= dateKey(end)))+'<h3>Otwarte według osób</h3>'+
         (activeOwners.length ? activeOwners.map(person => '<h4>'+escape(accounts[person])+'</h4>'+taskRows(open.filter(task => task.assignee === person))).join("") : taskRows([]));
     }
+    function confirmRemoval(meeting, task = null) {
+      removalTarget = {meeting, task};
+      get("deleteTitle").textContent = task
+        ? "Czy na pewno chcesz usunąć zadanie?"
+        : "Czy na pewno chcesz usunąć spotkanie?";
+      get("deleteDescription").textContent = task
+        ? "Zadanie zniknie ze wszystkich profili i raportów."
+        : "Spotkanie, wynik i powiązane zadania znikną dla wszystkich. Nagranie źródłowe podlega oddzielnej retencji.";
+      get("confirmDelete").textContent = task ? "Usuń zadanie" : "Usuń spotkanie";
+      const dialog = get("deleteDialog");
+      dialog.returnValue = "";
+      dialog.showModal();
+    }
     function renderDetail() {
       const meeting = meetings.find(item => item.id === selectedId && canRead(item));
       if (!meeting) { show("history"); return; }
+      const detailTasks = meeting.host === account ? meeting.tasks : visibleTasks(meeting);
+      const taskAction = index => account === "pm"
+        ? ' <button class="text-button" type="button" data-delete-task="'+index+'">Usuń zadanie</button>'
+        : "";
       const sections = [["Podsumowanie",meeting.summary],["Decyzje",meeting.decisions],["Tematy do wyjaśnienia",meeting.questions]];
       const accessForm = canEditAccess(meeting) ? '<form id="accessForm"><h2>Dostęp do spotkania</h2>'+
         accessChoices(meeting)+'<p class="muted">PM i dyrektor mają dostęp wynikający z roli.</p><button class="button secondary">Zapisz dostęp</button></form>' : "";
@@ -513,13 +532,16 @@
         ' · Dostępne do '+escape(monthsFrom(meeting.ended,6).toLocaleDateString("pl"))+'</p>'+
         '<p>Uczestnicy · '+escape(meeting.participants.map(id => accounts[id]).join(", "))+'</p>'+
         sections.filter(([,value]) => value?.trim()).map(([label,value]) => '<h3>'+label+'</h3><p class="result-text">'+escape(value)+'</p>').join("")+
-        '<h3>Zadania</h3>'+taskRows(visibleTasks(meeting))+accessForm+
-        '<div class="actions"><button class="button danger" id="deleteMeeting">Usuń spotkanie</button></div>';
+        '<h3>Zadania</h3>'+taskRows(detailTasks, taskAction)+accessForm+
+        (canDeleteMeeting(meeting) ? '<div class="actions"><button class="button danger" id="deleteMeeting">Usuń spotkanie</button></div>' : '');
       get("back").onclick = () => show("history");
-      get("deleteMeeting").onclick = () => {
-        get("deleteDialog").returnValue = "";
-        get("deleteDialog").showModal();
-      };
+      if (canDeleteMeeting(meeting)) get("deleteMeeting").onclick = () => confirmRemoval(meeting);
+      if (account === "pm") get("detail").querySelectorAll("[data-delete-task]").forEach(button => {
+        button.onclick = () => {
+          const task = meeting.tasks[Number(button.dataset.deleteTask)];
+          if (task) confirmRemoval(meeting, task);
+        };
+      });
       if (canEditAccess(meeting)) get("accessForm").onsubmit = event => {
         event.preventDefault();
         meeting.access = new FormData(event.target).getAll("member");
@@ -549,12 +571,24 @@
     get("weekDate").value = dateKey(new Date());
     get("weekDate").onchange = () => show("report");
     get("deleteDialog").onclose = () => {
-      if (get("deleteDialog").returnValue !== "delete") return;
-      const meeting = meetings.find(item => item.id === selectedId && canRead(item));
-      if (!meeting) return;
-      meetings = meetings.filter(item => item.id !== meeting.id);
+      const target = removalTarget;
+      removalTarget = null;
+      if (!target || get("deleteDialog").returnValue !== "delete") return;
+      const {meeting, task} = target;
+      pruneExpired();
+      if (!meetings.includes(meeting)) return;
+      if (task) {
+        if (account !== "pm" || !meeting.tasks.includes(task)) return;
+        meeting.tasks = meeting.tasks.filter(item => item !== task);
+        persist();
+        notify("Usunięto zadanie dla wszystkich.");
+        show("detail");
+        return;
+      }
+      if (!canDeleteMeeting(meeting)) return;
+      meetings = meetings.filter(item => item !== meeting);
       persist();
-      notify("Usunięto spotkanie i jego zadania.");
+      notify("Usunięto spotkanie i jego zadania dla wszystkich.");
       show("history");
     };
     get("todayHeading").textContent = new Date().toLocaleDateString("pl",{weekday:"long",day:"numeric",month:"long",year:"numeric"});

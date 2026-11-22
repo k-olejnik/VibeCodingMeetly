@@ -15,7 +15,7 @@ Zalogowany członek jednego zespołu rozpoznaje swoją rolę w Meetly, a aplikac
 
 1. Osoba otwiera E1 i loguje się przez usługę wybraną w Fazie A.
 2. Po pomyślnym logowaniu aplikacja odczytuje rolę przypisaną do konta przez właściciela projektu i przechodzi na E2.
-3. Każda z czterech ról może być prowadzącym importowanego spotkania. Dostęp do szkicu wymaga zweryfikowanego powiązania prowadzącego z kontem Meetly.
+3. Każda z czterech ról może być inicjatorem importowanego spotkania. Dostęp do szkicu wymaga zweryfikowanego powiązania inicjatora z kontem Meetly.
 4. Ekran zarządzania rolami nie istnieje w MVP; zwykły użytkownik nie może zmienić swojej roli.
 
 ## Dane
@@ -28,7 +28,7 @@ Czyta Konto: imię wyświetlane, e-mail, rola i powiązanie z kontem Matrix. To�
 - F01-KA2 [test]: Gdy niezalogowana osoba otwiera ekran wymagający konta, to nie otrzymuje żadnych danych i wraca do E1.
 - F01-KA3 [test]: Gdy Programista A próbuje zgłosić rolę PM przez adres lub zmienione dane przeglądarki, to baza albo serwer odrzuca żądanie uprzywilejowanych danych.
 - F01-KA4 [test]: Gdy konto Programista A próbuje odczytać Konto Programista B wraz z jego danymi logowania, to żądanie jest odrzucone albo zwraca wyłącznie dane dozwolone przez reguły dostępu.
-- F01-KA5 [ręcznie]: Gdy import wskazuje zweryfikowane konto prowadzącego dowolnej z czterech ról, osoba ta może otworzyć swój szkic w E5.
+- F01-KA5 [ręcznie]: Gdy import wskazuje zweryfikowane konto inicjatora dowolnej z czterech ról, osoba ta może otworzyć swój szkic w E5.
 
 ## Przypadki brzegowe i błędy
 

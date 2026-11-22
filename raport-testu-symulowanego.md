@@ -26,8 +26,15 @@ Zachowania porównano z [aktualną specyfikacją](SPEC.md) i [kartą F04](docs/f
 | T2-03 | A1 po zatwierdzeniu nie widzi zadania przekazanego A3 w szczegółach. Tester ocenił to jako problem UX o średnim priorytecie. | Zachowanie zgodne z US5/K2 i N1. Programista i analityk widzą własne zadania, a PM i dyrektor widzą wszystkie. | Propozycja UX do decyzji. Pełna lista w szczegółach dla prowadzącego wymaga wyjątku od N1. Zakładka „Zadania” może nadal pokazywać wyłącznie własne pozycje. |
 | T2-04 | Dane zapisują się w `localStorage`. Przełączenie konta demonstracyjnego działa w obrębie tej samej przeglądarki. | Ograniczenie prototypu HTML. Synchronizacja i rzeczywista autoryzacja są częścią docelowej aplikacji. | Doprecyzowano informację dla osoby otwierającej prototyp w README. |
 
+## Ustalenia po raporcie — 22 listopada 2026 r.
+
+- **T2-01.** Spotkanie może zainicjować każdy członek zespołu. Uczestnik z aktualnym dostępem może usunąć spotkanie dla wszystkich po potwierdzeniu. Nagranie źródłowe podlega osobnej retencji. Dopóki znajduje się na chronionym dysku, może posłużyć do ponownego importu. Prototyp symuluje usunięcie. Ponowny import opisano w specyfikacji integracji.
+- **T2-02.** Odebranie dostępu do wyniku nadal pozwala wykonawcy zobaczyć jego przydzielone zadanie. Jawne usunięcie zadania przez PM powoduje jego zniknięcie z wszystkich profili i raportów. Wcześniejsze i nowsze zadanie można rozróżnić przez jawne usunięcie nieaktualnej pozycji.
+- **T2-03.** Osoba inicjująca widzi wszystkie zadania w szczegółach swojego spotkania, o ile nadal ma do niego dostęp. Na własnej liście widzi zadania przypisane do siebie.
+- **T2-04.** Zapis pozostaje lokalny w prototypie.
+
 ## Wniosek
 
-Główny scenariusz został zaliczony w symulacji. Raport wzmacnia potrzebę świadomej decyzji o uprawnieniach do usuwania i widoku zadań prowadzącego. Zachowania opisane w T2-01–T2-03 odpowiadają obecnym wymaganiom. Po zatwierdzeniu ewentualnej zmiany zasad trzeba zaktualizować specyfikację i powtórzyć powiązany scenariusz.
+Główny scenariusz został zaliczony w symulacji. Zachowania opisane w T2-01–T2-03 odpowiadały wymaganiom na dzień testu. Powyższe ustalenia uwzględniono w kolejnej wersji specyfikacji i prototypu.
 
 Przebieg nie potwierdza działania integracji z Element i AI, autoryzacji po stronie serwera, synchronizacji między urządzeniami ani użyteczności dla niezależnych użytkowników. [Plan testu z użytkownikami](plan-testu-element.md) pozostaje osobnym punktem weryfikacji.

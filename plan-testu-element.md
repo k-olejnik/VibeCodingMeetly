@@ -12,6 +12,12 @@ Każda osoba testuje samodzielnie na świeżym stanie [prototypu](meetly-prototy
 4. Przełącz konto na Analityka A. Znajdź spotkanie w „Spotkaniach” i zadanie w „Zadaniach”. Porównaj skrót i przypisanie z krokiem drugim.
 5. W drugim przykładzie „Przegląd gotowości pilotażu dostaw” na koncie Analityka A sprawdź stan szkicu bez tematów do wyjaśnienia.
 
+### Scenariusze po zmianie zasad
+
+1. Otwórz zatwierdzony wynik jako uczestnik, wybierz „Usuń spotkanie” i anuluj. Spotkanie oraz zadania pozostają dostępne. Otwórz ten sam wynik jako osoba spoza listy obecności z przyznanym dostępem. Akcja usunięcia jest niedostępna. Wróć na konto uczestnika i potwierdź usunięcie. Wynik oraz powiązane zadania znikają we wszystkich widokach.
+2. Zatwierdź jako A1 spotkanie z zadaniem dla A3. A1 widzi to zadanie w szczegółach spotkania, a zakładka „Zadania” A1 je pomija. A3 widzi przypisane zadanie na swojej liście. Po odebraniu A3 dostępu do spotkania zadanie pozostaje na jego liście.
+3. Na koncie PM usuń pojedyncze wcześniejsze zadanie w szczegółach spotkania. Sprawdź, że zniknęło u wykonawcy, w szczegółach i w raporcie. Nowsze zadanie z kolejnego spotkania powinno pozostać widoczne.
+
 Próba sprawdza zrozumiałość interfejsu na danych demonstracyjnych. Integrację z Element, logowanie, reguły serwera i retencję potwierdzają oddzielne kryteria wdrożeniowe.
 
 ## Karta decyzji po teście
@@ -25,4 +31,6 @@ Wzorzec zapisujemy, gdy co najmniej dwie niezależnie testujące osoby napotkaj�
 
 ## Weryfikacja techniczna prototypu
 
-22 listopada 2026 r. test logiki JavaScript na fikcyjnych danych przeszedł dla Przeglądu, kolejki prowadzącego, zatwierdzania i porzucania szkicu, przypisywania zadań, pustej sekcji, zachowania długiego tekstu oraz widoczności wyniku dla różnych kont. Test używał atrapy DOM. Wygląd na telefonie i zrozumiałość ścieżki są do sprawdzenia w przeglądarce podczas sesji z uczestnikami.
+22 listopada 2026 r. test logiki JavaScript na fikcyjnych danych przeszedł dla Przeglądu, kolejki inicjatora, zatwierdzania i porzucania szkicu, przypisywania zadań, pustej sekcji, zachowania długiego tekstu oraz widoczności wyniku dla różnych kont. Test używał atrapy DOM. Wygląd na telefonie i zrozumiałość ścieżki są do sprawdzenia w przeglądarce podczas sesji z uczestnikami.
+
+Po zmianach T2 ponownie uruchomiono test logiki JavaScript z atrapą DOM. Przeszły scenariusze potwierdzenia i anulowania usuwania, braku uprawnienia u osoby spoza listy obecności, usunięcia zadania we wszystkich profilach i raporcie, zachowania nowszego zadania, widoku inicjatora i ponownego wczytania zapisanego stanu.
