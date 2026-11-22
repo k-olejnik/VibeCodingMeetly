@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meetly — historia spotkań</title>
+  <style>
+    :root {
+      --primary: #4b3cc4;
+      --primary-hover: #382aab;
+      --navy: #171b3e;
+      --blue: #2e69c7;
+      --accent: #e9eaff;
+      --background: #f3f5fc;
+      --surface: #ffffff;
+      --text: #181c36;
+      --muted: #58617a;
+      --success: #17624d;
+      --warning: #805000;
+      --error: #a33145;
+      --border: #dde2f0;
+      --radius-card: 16px;
+      --radius-control: 10px;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --space-7: 48px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--background);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-size: 16px; line-height: 1.5; background: radial-gradient(ellipse at 88% 0%, #e9eaff 0, transparent 36%), radial-gradient(ellipse at 4% 22%, #e4efff 0, transparent 28%), var(--background); }
+    button, input { font: inherit; }
+    button, a, input { min-height: 44px; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid #78a7f4; outline-offset: 2px; }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+    a { color: var(--primary); }
+    .shell { max-width: 1120px; margin: 0 auto; padding: var(--space-5); }
+    header { display: flex; align-items: center; gap: var(--space-4); padding: 14px 18px; border: 1px solid rgba(255,255,255,.12); border-radius: var(--radius-card); color: #fff; background: linear-gradient(110deg, #171b3e, #242b5b); box-shadow: 0 12px 30px rgba(27,31,75,.12); }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 750; font-size: 23px; letter-spacing: -.03em; }
+    .brand-mark { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; color: white; background: linear-gradient(140deg, #7969f2, #438ee6); font-size: 21px; }
+    .prototype-tag { margin-left: auto; color: #d8def7; font-size: 14px; }
+    .stepper { display: flex; gap: 8px; padding: var(--space-4) 0 var(--space-6); overflow-x: auto; }
+    .step { border: 1px solid #e0e4f1; border-radius: 999px; padding: 8px 14px; color: var(--muted); background: rgba(255,255,255,.72); white-space: nowrap; font-size: 14px; }
+    .step.current { color: white; border-color: transparent; background: linear-gradient(110deg, var(--primary), var(--blue)); box-shadow: 0 5px 14px rgba(75,60,196,.2); }
+    .dashboard-nav { display: flex; gap: 8px; margin: 18px 0 26px; padding: 6px; overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; background: rgba(255,255,255,.72); }
+    .dashboard-nav button { flex: 0 0 auto; padding: 9px 15px; border: 0; border-radius: 10px; color: var(--muted); background: transparent; font-weight: 650; }
+    .dashboard-nav button:hover { background: #f0efff; color: var(--primary); }
+    .dashboard-nav button[aria-current=page] { color: var(--primary); background: #ecebff; }
+    main { max-width: 860px; margin: 0 auto; }
+    main.dashboard-active { max-width: 1120px; }
+    .eyebrow { color: var(--muted); font-size: 14px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; }
+    h1 { margin: 6px 0 10px; font-size: clamp(28px, 4vw, 36px); line-height: 1.15; letter-spacing: -.035em; }
+    h2 { margin: 0 0 var(--space-4); font-size: 21px; letter-spacing: -.02em; }
+    p { margin: 0 0 var(--space-4); }
+    .muted { color: var(--muted); }
+    .card { padding: clamp(20px, 4vw, 32px); border: 1px solid rgba(211,218,237,.9); border-radius: var(--radius-card); background: rgba(255,255,255,.94); box-shadow: 0 12px 34px rgba(35,43,93,.07); }
+    .stack { display: grid; gap: var(--space-4); }
+    .intro { margin: 28px 0 var(--space-5); }
+    .transcript-intro { display: flex; align-items: start; justify-content: space-between; gap: var(--space-5); }
+    .transcript-intro .actions { flex: 0 0 auto; margin: 0; }
+    .dashboard-intro { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-top: 8px; }
+    .week-pill { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border: 1px solid var(--border); border-radius: 12px; color: var(--muted); background: white; }
+    .dashboard-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 22px 0 28px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .stat-card { min-height: 126px; padding: 20px; border: 1px solid var(--border); border-radius: var(--radius-card); background: rgba(255,255,255,.94); box-shadow: 0 8px 24px rgba(35,43,93,.045); }
+    .stat-label { color: var(--muted); }
+    .stat-value { display: flex; align-items: baseline; gap: 9px; margin-top: 10px; }
+    .stat-value strong { color: var(--navy); font-size: 34px; line-height: 1; }
+    .stat-value span { color: var(--muted); }
+    .dashboard-panel { margin-bottom: 22px; }
+    .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
+    .panel-heading h2 { margin: 0; }
+    .text-button { min-height: 44px; padding: 8px 0 8px 10px; border: 0; color: var(--primary); background: transparent; font-weight: 650; }
+    .text-button:hover { text-decoration: underline; }
+    .meeting-row { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-top: 1px solid var(--border); }
+    .meeting-icon { display: grid; flex: 0 0 42px; place-items: center; width: 42px; height: 42px; border-radius: 13px; color: var(--primary); background: var(--accent); }
+    .meeting-copy { min-width: 0; flex: 1; }
+    .meeting-copy strong { display: block; }
+    .meeting-copy span { color: var(--muted); font-size: 14px; }
+    .status-pill { flex: 0 0 auto; padding: 6px 11px; border-radius: 999px; color: #87520a; background: #fff3df; font-size: 14px; font-weight: 650; }
+    .status-pill.done { color: var(--success); background: #e7f4ee; }
+    .task-preview { display: grid; grid-template-columns: 22px 1fr auto; align-items: start; gap: 12px; padding: 13px 0; border-top: 1px solid var(--border); }
+    .fake-checkbox { width: 20px; height: 20px; margin-top: 2px; border: 2px solid #aeb8d2; border-radius: 6px; background: white; }
+    .task-preview strong { display: block; font-weight: 650; }
+    .task-preview small { color: var(--muted); }
+    .task-date { color: var(--muted); font-size: 14px; }
+    .dashboard-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .report-mini { min-height: 150px; display: flex; align-items: end; gap: 9px; padding: 18px; border-radius: 12px; background: linear-gradient(145deg, #f5f3ff, #f2f7ff); }
+    .report-bar { flex: 1; min-width: 12px; border-radius: 7px 7px 2px 2px; background: linear-gradient(180deg, #7869e8, #4c79cf); }
+    .toast { position: fixed; right: 24px; bottom: 24px; z-index: 5; max-width: min(420px, calc(100vw - 32px)); padding: 13px 17px; border-radius: 12px; color: white; background: var(--navy); box-shadow: 0 10px 30px rgba(20,26,62,.25); }
+    .toast[hidden] { display: none; }
+    .record-card { display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: var(--space-6); }
+    .record-visual { display: grid; place-items: center; min-height: 200px; border: 1px solid #e4e5fb; border-radius: 14px; background: linear-gradient(140deg, #f0edff, #e8f2ff); }
+    .mic { width: 74px; height: 74px; display: grid; place-items: center; border-radius: 50%; color: white; background: linear-gradient(140deg, #6854df, #3478d0); box-shadow: 0 10px 24px rgba(75,60,196,.24); font-size: 30px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 18px; border: 1px solid transparent; border-radius: var(--radius-control); font-weight: 700; text-decoration: none; transition: background .15s ease, transform .15s ease, box-shadow .15s ease; }
+    .button:hover { transform: translateY(-1px); box-shadow: 0 7px 16px rgba(48,56,130,.16); }
+    .primary { color: #fff; background: linear-gradient(110deg, var(--primary), var(--blue)); }
+    .primary:hover { background: linear-gradient(110deg, var(--primary-hover), #2459ad); }
+    .secondary { color: var(--primary); border-color: #d8dcef; background: #fff; }
+    .secondary:hover { background: #f2f3ff; }
+    .danger { color: #fff; background: var(--error); }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: var(--space-5); }
+    .live-indicator { display: inline-flex; align-items: center; gap: 9px; color: #9a2f2b; font-weight: 700; }
+    .live-dot { width: 11px; height: 11px; border-radius: 50%; background: #bb4540; box-shadow: 0 0 0 5px #f9e9e7; }
+    .transcript-content-title { margin: 0 0 var(--space-3); }
+    .transcript-line { display: grid; grid-template-columns: 64px 1fr; gap: 14px; padding: 15px 0; border-top: 1px solid var(--border); }
+    .transcript-line.transcript-full { grid-template-columns: 1fr; white-space: pre-line; }
+    .time { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); align-items: start; }
+    .summary-box { display: grid; gap: 12px; }
+    .summary-section { padding: 18px; border: 1px solid #e4e7f5; border-radius: 12px; background: linear-gradient(145deg, #f5f3ff, #f2f7ff); }
+    .summary-section h3 { margin: 0 0 8px; color: var(--navy); font-size: 17px; }
+    .summary-section-content { white-space: pre-line; }
+    .summary-edit { display: grid; gap: 10px; margin-top: 12px; }
+    .summary-edit[hidden] { display: none; }
+    .summary-edit textarea { width: 100%; min-height: 150px; padding: 12px; border: 1px solid #aeb8d2; border-radius: 10px; color: var(--text); background: white; resize: vertical; }
+    .summary-error { min-height: 22px; color: var(--error); font-size: 14px; }
+    .task-list { display: grid; gap: 12px; }
+    .bulk-task-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+    .bulk-forward-editor { display: grid; gap: 8px; margin: 0 0 12px; padding: 14px; border: 1px solid #d8dcef; border-radius: 12px; background: #f8f7ff; }
+    .bulk-forward-editor[hidden] { display: none; }
+    .bulk-forward-editor input { width: 100%; padding: 9px 11px; border: 1px solid #aeb8d2; border-radius: 8px; color: var(--text); background: white; }
+    .task { display: grid; grid-template-columns: 28px 1fr; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 12px; }
+    .task input[type=checkbox] { width: 20px; height: 20px; min-height: 20px; margin: 4px 0 0; accent-color: var(--primary); }
+    .task-text { font-weight: 650; }
+    .task.done .task-text { color: var(--muted); text-decoration: line-through; }
+    .task-edit { display: grid; gap: 8px; margin-top: 9px; }
+    .task-edit input { width: 100%; padding: 9px 11px; border: 1px solid #aeb8d2; border-radius: 8px; color: var(--text); background: white; }
+    .task-edit button { justify-self: start; }
+    .task-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
+    .task-recipient { margin: 8px 0 0; color: var(--success); font-size: 14px; }
+    .error-message { min-height: 22px; color: var(--error); font-size: 14px; }
+    .empty { padding: 22px; border: 1px dashed #a9b3d0; border-radius: 12px; color: var(--muted); text-align: center; }
+    .screen[hidden] { display: none; }
+    footer { max-width: 860px; margin: 30px auto 0; padding: 16px 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+    .map { display: grid; gap: 16px; margin-top: 20px; }
+    .map a { display: block; padding: 15px; border: 1px solid var(--border); border-radius: 10px; color: var(--navy); background: white; text-decoration: none; }
+    .map a:hover { border-color: #a9a2e8; background: #f8f7ff; }
+    @media (max-width: 700px) {
+      .shell { padding: 14px; }
+      .prototype-tag { font-size: 12px; }
+      .record-card, .result-grid { grid-template-columns: 1fr; }
+      .record-visual { min-height: 130px; }
+      .stepper { padding-bottom: 20px; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .dashboard-bottom { grid-template-columns: 1fr; }
+      .dashboard-intro { display: block; }
+      .transcript-intro { display: block; }
+      .transcript-intro .actions { margin-top: var(--space-4); }
+      .dashboard-top { align-items: stretch; flex-direction: column; }
+      .dashboard-top .button { width: 100%; }
+    }
+    .result-grid > * { min-width: 0; }
+    #draftTasks .task-editor { display: grid; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; }
+    .task-editor > button { justify-self: start; }
+    .growing-field { display: grid; min-width: 0; }
+    .growing-field > * {
+      grid-area: 1 / 1;
+      width: 100%;
+      min-width: 0;
+      min-height: 44px;
+      margin: 0;
+      padding: 8px 10px;
+      border: 1px solid transparent;
+      font: inherit;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .growing-field textarea { border-color: #a9b3cf; resize: none; overflow: hidden; }
+    .growing-field [aria-hidden="true"] { visibility: hidden; }
+    .result-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+    label { display: grid; gap: 5px; font-weight: 600; }
+    input, select, textarea { width: 100%; min-height: 44px; padding: 8px 10px; border: 1px solid #a9b3cf; border-radius: 8px; background: white; color: var(--text); font: inherit; }
+    .filters { display: grid; grid-template-columns: 2fr 1fr 1fr 1.45fr; gap: 12px; align-items: end; }
+    .age-fields { display:grid; grid-template-columns: .7fr 1.3fr; gap: 8px; }
+    .toolbar { display:flex; align-items:end; justify-content:space-between; gap:16px; margin: 24px 0; flex-wrap:wrap; }
+    .toolbar label { min-width: 190px; }
+    .notice { padding: 14px 16px; background: var(--accent); border-radius: 10px; }
+    .inline-check { display:flex; gap:10px; align-items:center; }
+    .inline-check input { width:18px; min-height:18px; }
+    dialog { max-width:min(480px, 92vw); border:1px solid var(--border); border-radius:16px; padding:24px; color:var(--text); }
+    dialog::backdrop { background:#171b3e80; }
+    [hidden] { display:none !important; }
+    @media (max-width: 700px) {
+      .filters { grid-template-columns: 1fr 1fr; }
+      .filters > :first-child, .filters > :last-child { grid-column:1/-1; }
+      .meeting-row { flex-wrap:wrap; }
+      .meeting-copy { min-width: 150px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand"><span class="brand-mark" aria-hidden="true">m</span>meetly</div>
+      <span class="prototype-tag">Prototyp · dane fikcyjne</span>
+    </header>
+    <main class="dashboard-active">
+      <div class="toolbar">
+        <div><div class="eyebrow" id="todayHeading"></div><h1 id="pageTitle">Dzień dobry</h1></div>
+        <label>Konto demonstracyjne<select id="account"></select></label>
+      </div>
+      <nav class="dashboard-nav" aria-label="Nawigacja Meetly">
+        <button type="button" data-view="overview" aria-current="page">⌂ &nbsp; Przegląd</button>
+        <button type="button" data-view="history">◷ &nbsp; Spotkania</button>
+        <button type="button" data-view="tasks">Zadania</button>
+        <button type="button" data-view="report" id="reportTab">Raport tygodniowy</button>
+        <button type="button" data-view="import">Import z Element</button>
+      </nav>
+      <p class="notice" id="notice" role="status" hidden></p>
+      <section data-panel="overview">
+        <div class="dashboard-top"><span class="week-pill" id="overviewWeek"></span><button class="button primary" type="button" data-view="import">Import z Element <span id="pendingCount"></span></button></div>
+        <section class="stats-grid" aria-label="Podsumowanie tygodnia">
+          <article class="stat-card"><div class="stat-label">Spotkania w tym tygodniu</div><div class="stat-value"><strong id="meetingCount"></strong><span>zapisanych wyników</span></div></article>
+          <article class="stat-card"><div class="stat-label">Zadania zamknięte</div><div class="stat-value"><strong id="closedCount"></strong><span>w tym tygodniu</span></div></article>
+          <article class="stat-card"><div class="stat-label">Zadania otwarte</div><div class="stat-value"><strong id="openCount"></strong><span id="ownerCount"></span></div></article>
+        </section>
+        <section class="card dashboard-panel"><div class="panel-heading"><h2>Ostatnie spotkania</h2><button class="text-button" type="button" data-view="history">Zobacz historię →</button></div><div id="recentMeetings"></div></section>
+        <div class="dashboard-bottom">
+          <section class="card dashboard-panel"><div class="panel-heading"><h2>Otwarte zadania</h2><button class="text-button" type="button" data-view="tasks">Zobacz zadania →</button></div><div id="recentTasks"></div></section>
+          <section class="card dashboard-panel"><div class="panel-heading"><h2>Podsumowanie tygodnia</h2><button class="text-button" id="overviewReport" type="button" data-view="report">Otwórz raport →</button></div><p class="muted">Spotkania i zamknięte zadania widoczne dla tego konta.</p><div class="report-mini" id="overviewChart"></div></section>
+        </div>
+      </section>
+      <section data-panel="history" hidden>
+        <div class="card dashboard-panel">
+          <h2>Historia spotkań</h2>
+          <form id="filters">
+            <div class="filters">
+              <label>Słowa w tytule lub podsumowaniu<input name="query" type="search" placeholder="np. integracja"></label>
+              <label>Od<input name="from" type="date"></label>
+              <label>Do<input name="to" type="date"></label>
+              <div class="age-fields">
+                <label>Starsze niż<input name="age" type="number" min="1" step="1"></label>
+                <label>Jednostka<select name="unit"><option value="days">Dni</option><option value="weeks">Tygodnie</option><option value="months">Miesiące</option></select></label>
+              </div>
+            </div>
+            <div class="actions"><button class="button primary">Szukaj</button><button class="button secondary" type="reset">Wyczyść filtry</button></div>
+            <p id="filterError" class="error-message" role="alert" hidden></p>
+          </form>
+        </div>
+        <div class="card" id="meetingList" aria-live="polite"></div>
+      </section>
+      <section data-panel="tasks" hidden><div class="card"><h2>Zadania ze spotkań</h2><div id="taskList"></div></div></section>
+      <section data-panel="report" hidden><div class="card">
+        <h2>Raport tygodniowy</h2>
+        <label>Data z wybranego tygodnia<input id="weekDate" type="date"></label>
+        <div id="reportList"></div>
+      </div></section>
+      <section data-panel="import" hidden><div class="card">
+        <h2>Spotkania do zatwierdzenia</h2>
+        <p class="muted">Po zakończeniu nagrania bot automatycznie przekazuje transkrypcję i listę obecności z Element. Prowadzący widzi tutaj szkic, gdy import jest gotowy.</p>
+        <div id="importQueue"></div>
+        <div id="draft" hidden>
+          <div class="intro"><span class="status-pill">Do zatwierdzenia</span><h2 id="draftTitle"></h2><p id="draftParticipants"></p></div>
+          <form id="draftForm" class="stack">
+            <label>Tytuł spotkania<input name="title" maxlength="120" required></label>
+            <div class="result-grid">
+              <section class="card stack" aria-labelledby="draftSummaryHeading">
+                <h2 id="draftSummaryHeading">Podsumowanie</h2>
+                <div class="summary-box">
+                  <label class="summary-section">Skrót<span class="growing-field"><textarea name="summary" rows="1" required></textarea><span aria-hidden="true"></span></span></label>
+                  <label class="summary-section" id="draftDecisions" hidden>Decyzje<span class="growing-field"><textarea name="decisions" rows="1"></textarea><span aria-hidden="true"></span></span></label>
+                  <label class="summary-section" id="draftQuestions" hidden>Tematy do wyjaśnienia<span class="growing-field"><textarea name="questions" rows="1"></textarea><span aria-hidden="true"></span></span></label>
+                </div>
+                <div class="task-actions">
+                  <button class="text-button" type="button" id="addDecisions" hidden>Dodaj decyzje</button>
+                  <button class="text-button" type="button" id="addQuestions" hidden>Dodaj tematy do wyjaśnienia</button>
+                </div>
+              </section>
+              <section class="card" aria-labelledby="draftTaskHeading">
+                <div class="panel-heading"><h2 id="draftTaskHeading">Zadania</h2><button class="text-button" type="button" id="addDraftTask">Dodaj zadanie</button></div>
+                <div class="stack" id="draftTasks"></div>
+              </section>
+            </div>
+            <section><h2>Kto zobaczy spotkanie</h2><p class="muted">Domyślnie zaznaczone są osoby obecne przy „bot start”. PM i dyrektor mają dostęp z roli.</p><div id="draftAccess"></div></section>
+            <div class="actions"><button class="button primary">Zatwierdź wynik</button><button class="button secondary" type="button" id="closeDraft">Wróć do kolejki</button><button class="button danger" type="button" id="discard">Porzuć szkic</button></div>
+          </form>
+        </div>
+      </div></section>
+      <section data-panel="detail" hidden><div class="card" id="detail"></div></section>
+    </main>
+    <footer>W prototypie integracja, AI i uprawnienia są symulowane. Dane są zapisywane w przeglądarce, jeśli pozwala na to jej konfiguracja.</footer>
+  </div>
+  <dialog id="deleteDialog">
+    <form method="dialog">
+      <h2>Usunąć spotkanie dla wszystkich?</h2>
+      <p>Spotkanie, podsumowanie, zadania i historia ich zmian zostaną usunięte.</p>
+      <div class="actions"><button class="button secondary" value="cancel" autofocus>Anuluj</button><button class="button danger" value="delete">Usuń spotkanie</button></div>
+    </form>
+  </dialog>
+  <script>
+    const accounts = {dev:"Programista A (A1)", analyst:"Analityk A (A3)", devB:"Programista B (A7)", pm:"PM A", director:"Dyrektor A",a2:"A2",a4:"A4",a5:"A5",a6:"A6",a8:"A8"};
+    const get = id => document.getElementById(id);
+    const escape = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[char]);
+    function dateKey(date) {
+      return [date.getFullYear(), String(date.getMonth()+1).padStart(2,"0"), String(date.getDate()).padStart(2,"0")].join("-");
+    }
+    function daysAgo(days) {
+      const date = new Date();
+      date.setDate(date.getDate()-days);
+      return date;
+    }
+    function monthsFrom(date, months) {
+      const result = new Date(date);
+      const day = result.getDate();
+      result.setDate(1);
+      result.setMonth(result.getMonth()+months);
+      const lastDay = new Date(result.getFullYear(),result.getMonth()+1,0).getDate();
+      result.setDate(Math.min(day,lastDay));
+      return result;
+    }
+    function fixture(id,title,days,participants,summary,task,closed=false) {
+      return {id,title,ended:daysAgo(days).toISOString(),participants,access:[...participants],summary,
+        decisions:"Potwierdzono zakres prac na kolejny etap.",questions:"",
+        tasks:[{text:task,assignee:participants[0],closed:closed ? dateKey(daysAgo(0)) : ""}]};
+    }
+    const deliverySummary = ["Zespół omawiał pilotaż dostaw zamówień z jednego sklepu sieci „Półka” w Brzozowie. Usługa ma pozwolić klientowi złożyć zamówienie w aplikacji lub na stronie, sklep ma skompletować zakupy, a zewnętrzny operator dostarczyć je pod wskazany adres. Nazwa „Punkt w 90” i dostawa w 90 minut są robocze. Celem spotkania było ustalenie zakresu pilotażu oraz wskazanie warunków, których spełnienie poprzedzi publiczny start.\n\nUzgodniony kierunek\n- Pilotaż projektowany jest dla jednego sklepu w Brzozowie. Drugi sklep może zostać rozważony jako rezerwowy po sprawdzeniu obsady. Wyników jednego sklepu nie wolno przedstawiać jako reprezentatywnych dla całej sieci.\n- 1 czerwca jest roboczym terminem konfiguracji/testów wewnętrznych, a 9 czerwca warunkowym celem startu publicznego. Żaden z terminów nie został zatwierdzony jako gwarantowany. Festyn i zamknięcia ulic w Brzozowie 5–6 czerwca przemawiają przeciw startowi w tych dniach.\n- Usługa ma być dostępna tylko w konfigurowanych godzinach danego sklepu i w zdefiniowanej strefie. Godziny oraz strefę trzeba oprzeć na realnej obsadzie, trasach i dostępności kurierów, nie na jednym ustawieniu dla wszystkich sklepów.\n- Na pilotaż preferowana jest płatność online. Płatność przy odbiorze nie jest planowana ze względu na obsługę gotówki i reklamacje. Publiczny start zależy od potwierdzenia, że można obciążyć klienta po kompletacji tylko za produkty faktycznie dostarczone.\n- Zamówienie ma pozwalać klientowi określić sposób postępowania w razie braku produktu: zaakceptować podobny zamiennik, poprosić o kontakt albo pominąć pozycję. Ostateczny tekst i zachowanie wymagają akceptacji prawnej i sprawdzenia aktualizacji kwoty płatności.\n- Sklep może na pilotażu ręcznie potwierdzać koniec kompletacji. Docelowe statusy dla klienta mają być proste i nie mogą sugerować dokładnej lokalizacji kuriera, jeśli system jej nie dostarcza. Dokładny sposób potwierdzenia dostawy i integracja statusów zależą od operatora.\n- Lista produktów i kategorii wykluczonych wymaga potwierdzenia. W rozmowie uzgodniono kierunek wykluczenia alkoholu, produktów wymagających weryfikacji wieku oraz produktów leczniczych; trzeba sprawdzić, jak te kategorie są oznaczone w asortymencie.", "1. Nie zatwierdzono obietnicy „dostawa w 90 minut” dla wszystkich zamówień. Czas kompletacji, oczekiwanie na kuriera i czas jazdy mają dużą zmienność; przyjęta wcześniej średnia kompletacji 15 minut nie odpowiadała koszykowi 18 pozycji, który w teście zajął 27 minut.\n2. Pilotaż ma ograniczony zakres: jeden sklep i konfigurowalny limit zamówień. Limit 12 dziennie jest propozycją do zweryfikowania, a nie decyzją produkcyjną. Ma zapobiec przeciążeniu sklepu i przyjęciu większej liczby zleceń niż operator może obsłużyć.\n3. Opłata 9,90 zł, minimalna wartość koszyka 80 zł, stawka dostawy oraz rabat promocyjny nie zostały zatwierdzone. Wstępna stawka operatora to 17 zł za kurs do 4 km przy małym wolumenie; 14 zł zależy od osiągnięcia nieustalonego wolumenu. Model finansowy ma pokazać kilka wariantów i uwzględnić kompletację, opakowania, płatność, braki i reklamacje.\n4. Przegląd wyników odbędzie się po dwóch tygodniach od uruchomienia. Progi sukcesu trzeba zdefiniować przed startem publicznym, kiedy znane będą koszty oraz możliwości kurierów. Wśród mierników mają znaleźć się: całkowity czas od potwierdzenia zamówienia do dostawy, czas kompletacji, brakujące pozycje/zamienniki, nieudane przekazania i koszt zmienny na zamówienie.\n5. Nie zatwierdzono promocji z kodem rabatowym. Taka promocja mogłaby zniekształcić ocenę ekonomiki usługi, a jej limit 100 zamówień sam w sobie nie rozwiązuje pytania, co ma mierzyć test.\n6. Obsługa klienta ma być jednym kanałem dla reklamacji dostawy; klient nie powinien sam rozstrzygać, czy problem leżał po stronie sklepu czy kuriera. Podział odpowiedzialności i terminy reklamacji wymagają uzgodnienia z operatorem.", "- Czy operator może przekazywać rzeczywistą dostępność kurierów, limity zleceń i status dostarczenia, czy pilot będzie wymagał ręcznej obsługi?\n- Czy 90 minut ma być celem wewnętrznym, deklarowanym przedziałem czy późniejszą obietnicą klientowską? Od którego zdarzenia liczyć czas i jakie wyjątki dopuścić?\n- Czy płatność częściowa po kompletacji działa w nowej ścieżce? Jak i kiedy klient otrzyma korektę kwoty za brakujące pozycje?\n- Czy operator obsłuży kod PIN/QR, plombę, skanowanie torby i numer pośredni? Czy dopuszcza zdjęcie dostawy i na jakich zasadach?\n- Kto formalnie zatwierdza umowę o danych, aktualizację regulaminu, teksty o zamiennikach i informację o przekazaniu danych?\n- Czy wspólny login sklepu jest dopuszczalny przy ograniczonym dostępie do telefonu i adresu? Jeśli nie, jaki minimalny mechanizm identyfikacji pracownika wdrożyć?\n- Czy 9 czerwca pozostaje realistycznym celem po otrzymaniu dokumentacji operatora i przejściu testu wewnętrznego? Start nie jest potwierdzony.\n- Kto będzie końcowym właścicielem zatwierdzenia zakresu publicznej komunikacji i progów sukcesu? Na spotkaniu nie uzgodniono tej osoby."];
+    const deliveryTasks = [{"text": "Uzyskać od operatora dostaw specyfikację API, dostęp do środowiska testowego oraz odpowiedź, czy można odczytać dostępność kurierów i ustawiać limity per sklep/miasto. Termin: 21 maja 2026.", "assignee": "a5", "closed": ""}, {"text": "Potwierdzić warunki handlowe dla pilotażu: stawkę 17 zł do 4 km, zasady dopłat za dalszy dystans, oczekiwanie, nieudany odbiór, wolumenowe progi 14 zł oraz SLA przy braku kuriera. Termin: 21 maja 2026.", "assignee": "a5", "closed": ""}, {"text": "Przygotować model finansowy dla koszyków 60/80/100 zł i opłat dostawy 9,90/14,90 zł, uwzględniając co najmniej 17 zł kosztu dostawy, różne czasy kompletacji, płatność, opakowania, braki i warianty wolumenu. Oznaczyć 40 kursów dziennie jako scenariusz długoterminowy, nie prognozę pilotażu. Termin: 25 maja 2026.", "assignee": "a4", "closed": ""}, {"text": "Sprawdzić możliwość częściowego obciążenia płatności po kompletacji i udokumentować przepływ autoryzacji, korekty kwoty i zwrotu. Termin: 22 maja 2026.", "assignee": "devB", "closed": ""}, {"text": "Przygotować zakres produktu do sprintu: adres i dostępność per sklep/godziny, konfiguracja strefy i limitu, zgoda na zamiennik/kontakt/pominięcie, dwa statusy klienta oraz znaczniki czasu. Termin: 15 maja 2026.", "assignee": "analyst", "closed": ""}, {"text": "Wykonać test 10 koszyków w sklepie i zebrać czas kompletacji, pozycje niedostępne, problemy pakowania oraz wpływ pory dnia; przygotować również porównanie stanów systemowych z półką dla 30 popularnych produktów rano i po południu. Termin: 20 maja 2026.", "assignee": "a8", "closed": ""}, {"text": "Sprawdzić obsadę, godziny działania usługi i realny limit dzienny dla sklepu w Brzozowie; zaproponować ustawienia godzin oraz strefy uwzględniające festyn 5–6 czerwca i objazdy. Termin: 22 maja 2026.", "assignee": "a2", "closed": ""}, {"text": "Przygotować projekt procesu obsługi braków, kontaktu z klientem, anulowania/zwrotu przy problemie pogodowym lub braku kuriera oraz jednego kanału reklamacji. Sprawdzić delegacje kwotowe (w rozmowie padła niezatwierdzona propozycja limitu 30 zł) i termin zgłoszeń reklamacji operatorowi. Termin: 25 maja 2026.", "assignee": "a6", "closed": ""}, {"text": "Potwierdzić wymogi przekazywania danych operatorowi, możliwość numeru pośredniego, retencję, role dostępowe i dziennik zmian; ustalić, czy wspólne konto sklepu może być użyte bez ujawniania danych wszystkim pracownikom. Termin: 25 maja 2026.", "assignee": "devB", "closed": ""}, {"text": "Opracować instrukcję kompletacji i pakowania oraz przeprowadzić szkolenie zespołu Brzozowa; określić materiały (torby, kartony, plomby/taśma), identyfikację paczki bez danych osobowych i wymagane urządzenie przy stanowisku. Termin: 29 maja 2026.", "assignee": "a2", "closed": ""}, {"text": "Ustalić przed startem publicznym progi sukcesu pilotażu i zatwierdzić komunikację klienta, w tym opłatę, minimalny koszyk, listę kategorii wykluczonych i brak promocji albo jej uzasadniony wariant. Termin: przed decyzją o starcie; konkretnej daty i właściciela końcowego zatwierdzenia nie ustalono.", "assignee": "", "closed": ""}];
+    const storageKey = "meetly-element-demo-v2";
+    function load() {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) return JSON.parse(saved);
+      } catch {}
+      const delivery = fixture("delivery","Uruchomienie miejskiej usługi dostaw",0,["dev","a2","analyst","a4","a5","a6","devB","a8"],deliverySummary[0],"");
+      Object.assign(delivery,{host:"dev",decisions:deliverySummary[1],questions:deliverySummary[2],
+        tasks:deliveryTasks.map(task=>({...task}))});
+      const review = fixture("review","Przegląd gotowości pilotażu dostaw",0,["analyst","pm"],"Zespół sprawdził gotowość do testów wewnętrznych.","Potwierdzić datę próby w sklepie.");
+      review.host = "analyst";
+      return {queue:[delivery,review],meetings:[
+        fixture("integration","Integracja z operatorem dostaw",0,["dev","devB"],"Ustalono zakres testów statusów dostawy oraz dostępności kurierów.","Sprawdzić import statusów dostawy."),
+        fixture("orders","Test koszyków w sklepie",0,["analyst","dev"],"Porównano czasy kompletacji małych i dużych koszyków.","Zebrać czasy kompletacji.",true),
+        fixture("pilot","Założenia pilotażu dostaw",16,["devB","pm"],"Uzgodniono pilotaż w jednym sklepie.","Przygotować listę warunków publicznego startu.")
+      ]};
+    }
+    let {meetings,queue} = load();
+    let account = "dev";
+    let selectedId = "";
+    let draftId = "";
+    let view = "overview";
+    const privileged = () => account === "pm" || account === "director";
+    const canRead = meeting => privileged() || meeting.access.includes(account);
+    const canEditAccess = meeting => privileged() || (canRead(meeting) && meeting.participants.includes(account));
+    const visibleTasks = meeting => meeting.tasks.filter(task => privileged() || task.assignee === account);
+    function persist() {
+      try { localStorage.setItem(storageKey, JSON.stringify({meetings,queue})); } catch {}
+    }
+    function pruneExpired() {
+      const active = meetings.filter(meeting => new Date() < monthsFrom(meeting.ended,6));
+      if (active.length !== meetings.length) {
+        meetings = active;
+        persist();
+      }
+    }
+    function notify(message) {
+      get("notice").textContent = message;
+      get("notice").hidden = !message;
+    }
+    function show(next) {
+      pruneExpired();
+      view = next === "report" && !privileged() ? "history" : next;
+      document.querySelectorAll("[data-panel]").forEach(panel => panel.hidden = panel.dataset.panel !== view);
+      document.querySelectorAll("[data-view]").forEach(button => {
+        if (button.dataset.view === view || (view === "detail" && button.dataset.view === "history")) button.setAttribute("aria-current","page");
+        else button.removeAttribute("aria-current");
+      });
+      get("reportTab").hidden = !privileged();
+      const titles = {overview:"Dzień dobry",history:"Spotkania",tasks:"Zadania",report:"Raport tygodniowy",import:"Import z Element",detail:"Spotkanie"};
+      get("pageTitle").textContent = titles[view];
+      if (view === "overview") renderOverview();
+      if (view === "history") renderHistory();
+      if (view === "detail") renderDetail();
+      if (view === "tasks") renderTasks();
+      if (view === "report") renderReport();
+      if (view === "import") renderQueue();
+    }
+    function meetingRows(results, attribute = "data-open", action = "Otwórz") {
+      return results.map(meeting => '<div class="meeting-row"><span class="meeting-icon" aria-hidden="true">◷</span><div class="meeting-copy"><strong>'+
+        escape(meeting.title)+'</strong><span>'+escape(new Date(meeting.ended).toLocaleDateString("pl"))+' · Element</span></div>'+
+        '<button class="button secondary" '+attribute+'="'+escape(meeting.id)+'">'+action+'</button></div>').join("");
+    }
+    function renderOverview() {
+      const start = new Date();
+      start.setDate(start.getDate() - ((start.getDay()+6)%7));
+      const days = Array.from({length:7},(_,index) => {
+        const date = new Date(start);
+        date.setDate(date.getDate()+index);
+        return dateKey(date);
+      });
+      const visible = meetings.filter(canRead).sort((a,b)=>b.ended.localeCompare(a.ended));
+      const tasks = meetings.flatMap(visibleTasks);
+      const open = tasks.filter(task=>!task.closed);
+      const weekMeetings = visible.filter(meeting=>days.includes(dateKey(new Date(meeting.ended))));
+      const closed = tasks.filter(task=>days.includes(task.closed));
+      get("overviewWeek").textContent = "Tydzień "+start.toLocaleDateString("pl")+" – "+new Date(days[6]+"T12:00").toLocaleDateString("pl");
+      get("pendingCount").textContent = "("+queue.filter(meeting=>meeting.host===account).length+")";
+      get("meetingCount").textContent = weekMeetings.length;
+      get("closedCount").textContent = closed.length;
+      get("openCount").textContent = open.length;
+      get("ownerCount").textContent = "Osoby: "+new Set(open.map(task=>task.assignee)).size;
+      get("recentMeetings").innerHTML = meetingRows(visible.slice(0,3)) || '<p class="empty">Brak zatwierdzonych spotkań.</p>';
+      get("recentTasks").innerHTML = open.slice(0,4).map(task=>'<div class="task-preview"><span class="fake-checkbox" aria-hidden="true"></span><div><strong>'+escape(task.text)+'</strong><small>'+escape(accounts[task.assignee])+'</small></div></div>').join("") || '<p class="empty">Brak otwartych zadań.</p>';
+      get("overviewReport").hidden = !privileged();
+      const counts = days.map(day=>weekMeetings.filter(meeting=>dateKey(new Date(meeting.ended))===day).length+closed.filter(task=>task.closed===day).length);
+      const max = Math.max(1,...counts);
+      get("overviewChart").setAttribute("aria-label","Aktywność od poniedziałku do niedzieli: "+counts.join(", "));
+      get("overviewChart").setAttribute("role","img");
+      get("overviewChart").innerHTML = counts.map((count,index)=>'<span class="report-bar" style="height:'+Math.max(4,100*count/max)+'%" title="'+days[index]+' · '+count+'"></span>').join("");
+    }
+    function renderQueue() {
+      const pending = queue.filter(meeting=>meeting.host===account);
+      get("importQueue").innerHTML = meetingRows(pending,"data-draft","Sprawdź szkic") || '<p class="empty">Brak spotkań do zatwierdzenia.</p>';
+      if (!pending.some(meeting=>meeting.id===draftId)) get("draft").hidden = true;
+    }
+    function fitDraftText(field) {
+      field.nextElementSibling.textContent = field.value + " ";
+    }
+    function showOptionalSection(sectionId, buttonId, visible) {
+      get(sectionId).hidden = !visible;
+      get(buttonId).hidden = visible;
+    }
+    function addDraftTask(task = {text:"",assignee:""}) {
+      const row = document.createElement("div");
+      row.className = "task-editor";
+      const meeting = queue.find(item=>item.id===draftId);
+      row.innerHTML = '<label>Treść zadania<span class="growing-field"><textarea name="taskText" rows="1" maxlength="500"></textarea><span aria-hidden="true"></span></span></label>'+
+        '<label>Osoba odpowiedzialna<select name="taskAssignee"><option value="">Do wyjaśnienia</option>'+
+        meeting.participants.map(person=>'<option value="'+person+'"'+(task.assignee===person?' selected':'')+'>'+escape(accounts[person])+'</option>').join("")+
+        '</select></label><button class="button secondary" type="button">Usuń zadanie</button>';
+      const field = row.querySelector("textarea");
+      field.value = task.text;
+      fitDraftText(field);
+      row.querySelector("button").onclick = ()=>row.remove();
+      get("draftTasks").append(row);
+    }
+    function openDraft(id) {
+      const meeting = queue.find(item=>item.id===id && item.host===account);
+      if (!meeting) return;
+      draftId = id;
+      const form = get("draftForm");
+      form.elements.namedItem("title").value = meeting.title;
+      for (const name of ["summary","decisions","questions"]) {
+        const field = form.elements.namedItem(name);
+        field.value = meeting[name] || "";
+        fitDraftText(field);
+      }
+      showOptionalSection("draftDecisions","addDecisions",Boolean(meeting.decisions?.trim()));
+      showOptionalSection("draftQuestions","addQuestions",Boolean(meeting.questions?.trim()));
+      get("draftTitle").textContent = meeting.title;
+      get("draftParticipants").textContent = "Uczestnicy · "+meeting.participants.map(person=>accounts[person]).join(", ");
+      get("draftAccess").innerHTML = accessChoices(meeting);
+      get("draftTasks").replaceChildren();
+      meeting.tasks.forEach(addDraftTask);
+      get("draft").hidden = false;
+      get("draftTitle").scrollIntoView({block:"nearest"});
+    }
+    function accessChoices(meeting) {
+      return Object.entries(accounts).filter(([id])=>id!=="pm" && id!=="director").map(([id,name])=>
+        '<label class="inline-check"><input type="checkbox" name="member" value="'+id+'"'+(meeting.access.includes(id)?' checked':'')+'>'+escape(name)+'</label>'
+      ).join("");
+    }
+    function renderHistory() {
+      const form = get("filters");
+      const {query,from,to,age,unit} = form.elements;
+      const invalidRange = from.value && to.value && from.value > to.value;
+      const error = get("filterError");
+      error.hidden = !invalidRange;
+      error.textContent = invalidRange ? "Data „Od” musi przypadać najpóźniej w dniu „Do”." : "";
+      const amount = Number(age.value);
+      const cutoff = amount ? (unit.value === "months" ? monthsFrom(new Date(),-amount) : daysAgo(amount*(unit.value === "weeks" ? 7 : 1))) : null;
+      const words = query.value.toLocaleLowerCase("pl").trim().split(/\s+/).filter(Boolean);
+      const results = meetings.filter(meeting => {
+        const ended = new Date(meeting.ended);
+        const day = dateKey(ended);
+        const searchable = (meeting.title + " " + meeting.summary).toLocaleLowerCase("pl");
+        return canRead(meeting) && !invalidRange && words.every(word => searchable.includes(word)) &&
+          (!from.value || day >= from.value) && (!to.value || day <= to.value) && (!cutoff || ended < cutoff);
+      }).sort((a,b) => b.ended.localeCompare(a.ended));
+      get("meetingList").innerHTML = meetingRows(results) || '<p class="empty">Brak spotkań spełniających filtry.</p>';
+    }
+    function taskRows(rows) {
+      return rows.length ? '<ul>'+rows.map(task => '<li>'+escape(task.text)+' · '+escape(accounts[task.assignee])+' · '+(task.closed ? 'Zamknięte' : 'Otwarte')+'</li>').join("")+'</ul>' : '<p class="empty">Brak zadań.</p>';
+    }
+    function renderTasks() {
+      get("taskList").innerHTML = taskRows(meetings.flatMap(visibleTasks));
+    }
+    function renderReport() {
+      const start = new Date(get("weekDate").value + "T12:00:00");
+      if (!get("weekDate").value) { get("reportList").textContent = "Wybierz datę."; return; }
+      start.setDate(start.getDate() - ((start.getDay()+6)%7));
+      const end = new Date(start);
+      end.setDate(end.getDate()+6);
+      const tasks = meetings.flatMap(visibleTasks);
+      const open = tasks.filter(task => !task.closed);
+      const activeOwners = Object.keys(accounts).filter(person => open.some(task => task.assignee === person));
+      get("reportList").innerHTML = '<p class="muted">'+escape(start.toLocaleDateString("pl"))+' – '+escape(end.toLocaleDateString("pl"))+'</p><h3>Zamknięte w tym tygodniu</h3>'+
+        taskRows(tasks.filter(task => task.closed && task.closed >= dateKey(start) && task.closed <= dateKey(end)))+'<h3>Otwarte według osób</h3>'+
+        (activeOwners.length ? activeOwners.map(person => '<h4>'+escape(accounts[person])+'</h4>'+taskRows(open.filter(task => task.assignee === person))).join("") : taskRows([]));
+    }
+    function renderDetail() {
+      const meeting = meetings.find(item => item.id === selectedId && canRead(item));
+      if (!meeting) { show("history"); return; }
+      const sections = [["Podsumowanie",meeting.summary],["Decyzje",meeting.decisions],["Tematy do wyjaśnienia",meeting.questions]];
+      const accessForm = canEditAccess(meeting) ? '<form id="accessForm"><h2>Dostęp do spotkania</h2>'+
+        accessChoices(meeting)+'<p class="muted">PM i dyrektor mają dostęp wynikający z roli.</p><button class="button secondary">Zapisz dostęp</button></form>' : "";
+      get("detail").innerHTML = '<button class="text-button" id="back">← Historia spotkań</button><h2>'+escape(meeting.title)+'</h2><p class="muted">Element · '+escape(new Date(meeting.ended).toLocaleDateString("pl"))+
+        ' · Dostępne do '+escape(monthsFrom(meeting.ended,6).toLocaleDateString("pl"))+'</p>'+
+        '<p>Uczestnicy · '+escape(meeting.participants.map(id => accounts[id]).join(", "))+'</p>'+
+        sections.filter(([,value]) => value?.trim()).map(([label,value]) => '<h3>'+label+'</h3><p class="result-text">'+escape(value)+'</p>').join("")+
+        '<h3>Zadania</h3>'+taskRows(visibleTasks(meeting))+accessForm+
+        '<div class="actions"><button class="button danger" id="deleteMeeting">Usuń spotkanie</button></div>';
+      get("back").onclick = () => show("history");
+      get("deleteMeeting").onclick = () => {
+        get("deleteDialog").returnValue = "";
+        get("deleteDialog").showModal();
+      };
+      if (canEditAccess(meeting)) get("accessForm").onsubmit = event => {
+        event.preventDefault();
+        meeting.access = new FormData(event.target).getAll("member");
+        persist();
+        notify("Zapisano dostęp do spotkania.");
+        show("detail");
+      };
+    }
+    get("account").innerHTML = Object.entries(accounts).map(([id,name]) => '<option value="'+id+'">'+escape(name)+'</option>').join("");
+    get("account").onchange = event => {
+      account = event.target.value;
+      draftId = "";
+      get("draft").hidden = true;
+      notify("");
+      show(view === "detail" ? "history" : view);
+    };
+    document.querySelectorAll("[data-view]").forEach(button => button.onclick = () => { notify(""); show(button.dataset.view); });
+    get("filters").onsubmit = event => { event.preventDefault(); show("history"); };
+    get("filters").onreset = () => setTimeout(() => show("history"),0);
+    get("meetingList").onclick = get("recentMeetings").onclick = event => {
+      const button = event.target.closest("[data-open]");
+      if (!button) return;
+      selectedId = button.dataset.open;
+      notify("");
+      show("detail");
+    };
+    get("weekDate").value = dateKey(new Date());
+    get("weekDate").onchange = () => show("report");
+    get("deleteDialog").onclose = () => {
+      if (get("deleteDialog").returnValue !== "delete") return;
+      const meeting = meetings.find(item => item.id === selectedId && canRead(item));
+      if (!meeting) return;
+      meetings = meetings.filter(item => item.id !== meeting.id);
+      persist();
+      notify("Usunięto spotkanie i jego zadania.");
+      show("history");
+    };
+    get("todayHeading").textContent = new Date().toLocaleDateString("pl",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    get("importQueue").onclick = event => {
+      const button = event.target.closest("[data-draft]");
+      if (button) { notify(""); openDraft(button.dataset.draft); }
+    };
+    get("draftForm").oninput = event => {
+      if (event.target.matches(".growing-field textarea")) fitDraftText(event.target);
+    };
+    get("addDecisions").onclick = () => {
+      showOptionalSection("draftDecisions","addDecisions",true);
+      get("draftForm").elements.namedItem("decisions").focus();
+    };
+    get("addQuestions").onclick = () => {
+      showOptionalSection("draftQuestions","addQuestions",true);
+      get("draftForm").elements.namedItem("questions").focus();
+    };
+    get("addDraftTask").onclick = () => addDraftTask();
+    get("closeDraft").onclick = () => { draftId=""; get("draft").hidden=true; };
+    get("discard").onclick = () => {
+      queue = queue.filter(item=>!(item.id===draftId && item.host===account));
+      draftId="";
+      persist();
+      show("import");
+      notify("Porzucono szkic.");
+    };
+    get("draftForm").onsubmit = event => {
+      event.preventDefault();
+      const meeting = queue.find(item=>item.id===draftId && item.host===account);
+      if (!meeting) return;
+      const data = new FormData(event.target);
+      const title = data.get("title").trim();
+      const summary = data.get("summary").trim();
+      if (!title || !summary) { notify("Uzupełnij tytuł i podsumowanie."); return; }
+      const assignments = data.getAll("taskAssignee");
+      const tasks = data.getAll("taskText").map((text,index)=>({text:text.trim(),assignee:assignments[index],closed:""})).filter(task=>task.text);
+      const unresolved = tasks.filter(task=>!task.assignee).map(task=>"Ustalić osobę odpowiedzialną: "+task.text);
+      meetings.push({...meeting,title,summary,decisions:data.get("decisions").trim(),
+        questions:[data.get("questions").trim(),...unresolved].filter(Boolean).join("\n"),
+        access:data.getAll("member"),tasks:tasks.filter(task=>task.assignee)});
+      queue = queue.filter(item=>item.id!==draftId);
+      selectedId = draftId;
+      draftId = "";
+      get("draft").hidden = true;
+      persist();
+      notify("Zatwierdzono wynik spotkania.");
+      show("detail");
+    };
+    show("overview");
+  </script>
+</body>
+</html>
