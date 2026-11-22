@@ -296,6 +296,7 @@
   </dialog>
   <script>
     const accounts = {dev:"Programista A (A1)", analyst:"Analityk A (A3)", devB:"Programista B (A7)", pm:"PM A", director:"Dyrektor A",a2:"A2",a4:"A4",a5:"A5",a6:"A6",a8:"A8"};
+    const defaultAccount = "pm";
     const get = id => document.getElementById(id);
     const escape = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[char]);
     function dateKey(date) {
@@ -404,7 +405,7 @@
       ]};
     }
     let {meetings,queue} = load();
-    let account = "pm";
+    let account = defaultAccount;
     let selectedId = "";
     let draftId = "";
     let view = "overview";
@@ -626,9 +627,15 @@
       const task = meeting?.tasks[Number(button.dataset.deleteTask)];
       if (task && canDeleteTask(meeting, task)) confirmRemoval(meeting, task);
     };
-    get("account").innerHTML = Object.entries(accounts).map(([id,name]) => '<option value="'+id+'">'+escape(name)+'</option>').join("");
-    get("account").value = account;
-    get("account").onchange = event => {
+    const accountPicker = get("account");
+    const accountIds = [defaultAccount,...Object.keys(accounts).filter(id=>id!==defaultAccount)];
+    accountPicker.innerHTML = accountIds.map(id => '<option value="'+id+'"'+(id===defaultAccount?' selected':'')+'>'+escape(accounts[id])+'</option>').join("");
+    accountPicker.value = account;
+    window.addEventListener("pageshow", () => {
+      // Align the picker after the browser restores form controls.
+      requestAnimationFrame(() => { accountPicker.value = account; });
+    });
+    accountPicker.onchange = event => {
       account = event.target.value;
       draftId = "";
       get("draft").hidden = true;
