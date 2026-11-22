@@ -204,7 +204,7 @@
     <main class="dashboard-active">
       <div class="toolbar">
         <div><div class="eyebrow" id="todayHeading"></div><h1 id="pageTitle">Dzień dobry</h1></div>
-        <label>Konto demonstracyjne<select id="account"></select></label>
+        <label>Konto demonstracyjne<select id="account" autocomplete="off"></select></label>
       </div>
       <nav class="dashboard-nav" aria-label="Nawigacja Meetly">
         <button type="button" data-view="overview" aria-current="page">⌂ &nbsp; Przegląd</button>
@@ -322,7 +322,7 @@
     }
     const deliverySummary = ["Zespół omawiał pilotaż dostaw zamówień z jednego sklepu sieci „Półka” w Brzozowie. Usługa ma pozwolić klientowi złożyć zamówienie w aplikacji lub na stronie, sklep ma skompletować zakupy, a zewnętrzny operator dostarczyć je pod wskazany adres. Nazwa „Punkt w 90” i dostawa w 90 minut są robocze. Celem spotkania było ustalenie zakresu pilotażu oraz wskazanie warunków, których spełnienie poprzedzi publiczny start.\n\nUzgodniony kierunek\n- Pilotaż projektowany jest dla jednego sklepu w Brzozowie. Drugi sklep może zostać rozważony jako rezerwowy po sprawdzeniu obsady. Wyników jednego sklepu nie wolno przedstawiać jako reprezentatywnych dla całej sieci.\n- 1 czerwca jest roboczym terminem konfiguracji/testów wewnętrznych, a 9 czerwca warunkowym celem startu publicznego. Żaden z terminów nie został zatwierdzony jako gwarantowany. Festyn i zamknięcia ulic w Brzozowie 5–6 czerwca przemawiają przeciw startowi w tych dniach.\n- Usługa ma być dostępna tylko w konfigurowanych godzinach danego sklepu i w zdefiniowanej strefie. Godziny oraz strefę trzeba oprzeć na realnej obsadzie, trasach i dostępności kurierów, nie na jednym ustawieniu dla wszystkich sklepów.\n- Na pilotaż preferowana jest płatność online. Płatność przy odbiorze nie jest planowana ze względu na obsługę gotówki i reklamacje. Publiczny start zależy od potwierdzenia, że można obciążyć klienta po kompletacji tylko za produkty faktycznie dostarczone.\n- Zamówienie ma pozwalać klientowi określić sposób postępowania w razie braku produktu: zaakceptować podobny zamiennik, poprosić o kontakt albo pominąć pozycję. Ostateczny tekst i zachowanie wymagają akceptacji prawnej i sprawdzenia aktualizacji kwoty płatności.\n- Sklep może na pilotażu ręcznie potwierdzać koniec kompletacji. Docelowe statusy dla klienta mają być proste i nie mogą sugerować dokładnej lokalizacji kuriera, jeśli system jej nie dostarcza. Dokładny sposób potwierdzenia dostawy i integracja statusów zależą od operatora.\n- Lista produktów i kategorii wykluczonych wymaga potwierdzenia. W rozmowie uzgodniono kierunek wykluczenia alkoholu, produktów wymagających weryfikacji wieku oraz produktów leczniczych; trzeba sprawdzić, jak te kategorie są oznaczone w asortymencie.", "1. Nie zatwierdzono obietnicy „dostawa w 90 minut” dla wszystkich zamówień. Czas kompletacji, oczekiwanie na kuriera i czas jazdy mają dużą zmienność; przyjęta wcześniej średnia kompletacji 15 minut nie odpowiadała koszykowi 18 pozycji, który w teście zajął 27 minut.\n2. Pilotaż ma ograniczony zakres: jeden sklep i konfigurowalny limit zamówień. Limit 12 dziennie jest propozycją do zweryfikowania, a nie decyzją produkcyjną. Ma zapobiec przeciążeniu sklepu i przyjęciu większej liczby zleceń niż operator może obsłużyć.\n3. Opłata 9,90 zł, minimalna wartość koszyka 80 zł, stawka dostawy oraz rabat promocyjny nie zostały zatwierdzone. Wstępna stawka operatora to 17 zł za kurs do 4 km przy małym wolumenie; 14 zł zależy od osiągnięcia nieustalonego wolumenu. Model finansowy ma pokazać kilka wariantów i uwzględnić kompletację, opakowania, płatność, braki i reklamacje.\n4. Przegląd wyników odbędzie się po dwóch tygodniach od uruchomienia. Progi sukcesu trzeba zdefiniować przed startem publicznym, kiedy znane będą koszty oraz możliwości kurierów. Wśród mierników mają znaleźć się: całkowity czas od potwierdzenia zamówienia do dostawy, czas kompletacji, brakujące pozycje/zamienniki, nieudane przekazania i koszt zmienny na zamówienie.\n5. Nie zatwierdzono promocji z kodem rabatowym. Taka promocja mogłaby zniekształcić ocenę ekonomiki usługi, a jej limit 100 zamówień sam w sobie nie rozwiązuje pytania, co ma mierzyć test.\n6. Obsługa klienta ma być jednym kanałem dla reklamacji dostawy; klient nie powinien sam rozstrzygać, czy problem leżał po stronie sklepu czy kuriera. Podział odpowiedzialności i terminy reklamacji wymagają uzgodnienia z operatorem.", "- Czy operator może przekazywać rzeczywistą dostępność kurierów, limity zleceń i status dostarczenia, czy pilot będzie wymagał ręcznej obsługi?\n- Czy 90 minut ma być celem wewnętrznym, deklarowanym przedziałem czy późniejszą obietnicą klientowską? Od którego zdarzenia liczyć czas i jakie wyjątki dopuścić?\n- Czy płatność częściowa po kompletacji działa w nowej ścieżce? Jak i kiedy klient otrzyma korektę kwoty za brakujące pozycje?\n- Czy operator obsłuży kod PIN/QR, plombę, skanowanie torby i numer pośredni? Czy dopuszcza zdjęcie dostawy i na jakich zasadach?\n- Kto formalnie zatwierdza umowę o danych, aktualizację regulaminu, teksty o zamiennikach i informację o przekazaniu danych?\n- Czy wspólny login sklepu jest dopuszczalny przy ograniczonym dostępie do telefonu i adresu? Jeśli nie, jaki minimalny mechanizm identyfikacji pracownika wdrożyć?\n- Czy 9 czerwca pozostaje realistycznym celem po otrzymaniu dokumentacji operatora i przejściu testu wewnętrznego? Start nie jest potwierdzony.\n- Kto będzie końcowym właścicielem zatwierdzenia zakresu publicznej komunikacji i progów sukcesu? Na spotkaniu nie uzgodniono tej osoby."];
     const deliveryTasks = [{"text": "Uzyskać od operatora dostaw specyfikację API, dostęp do środowiska testowego oraz odpowiedź, czy można odczytać dostępność kurierów i ustawiać limity per sklep/miasto. Termin: 21 maja 2026.", "assignee": "a5", "closed": ""}, {"text": "Potwierdzić warunki handlowe dla pilotażu: stawkę 17 zł do 4 km, zasady dopłat za dalszy dystans, oczekiwanie, nieudany odbiór, wolumenowe progi 14 zł oraz SLA przy braku kuriera. Termin: 21 maja 2026.", "assignee": "a5", "closed": ""}, {"text": "Przygotować model finansowy dla koszyków 60/80/100 zł i opłat dostawy 9,90/14,90 zł, uwzględniając co najmniej 17 zł kosztu dostawy, różne czasy kompletacji, płatność, opakowania, braki i warianty wolumenu. Oznaczyć 40 kursów dziennie jako scenariusz długoterminowy, nie prognozę pilotażu. Termin: 25 maja 2026.", "assignee": "a4", "closed": ""}, {"text": "Sprawdzić możliwość częściowego obciążenia płatności po kompletacji i udokumentować przepływ autoryzacji, korekty kwoty i zwrotu. Termin: 22 maja 2026.", "assignee": "devB", "closed": ""}, {"text": "Przygotować zakres produktu do sprintu: adres i dostępność per sklep/godziny, konfiguracja strefy i limitu, zgoda na zamiennik/kontakt/pominięcie, dwa statusy klienta oraz znaczniki czasu. Termin: 15 maja 2026.", "assignee": "analyst", "closed": ""}, {"text": "Wykonać test 10 koszyków w sklepie i zebrać czas kompletacji, pozycje niedostępne, problemy pakowania oraz wpływ pory dnia; przygotować również porównanie stanów systemowych z półką dla 30 popularnych produktów rano i po południu. Termin: 20 maja 2026.", "assignee": "a8", "closed": ""}, {"text": "Sprawdzić obsadę, godziny działania usługi i realny limit dzienny dla sklepu w Brzozowie; zaproponować ustawienia godzin oraz strefy uwzględniające festyn 5–6 czerwca i objazdy. Termin: 22 maja 2026.", "assignee": "a2", "closed": ""}, {"text": "Przygotować projekt procesu obsługi braków, kontaktu z klientem, anulowania/zwrotu przy problemie pogodowym lub braku kuriera oraz jednego kanału reklamacji. Sprawdzić delegacje kwotowe (w rozmowie padła niezatwierdzona propozycja limitu 30 zł) i termin zgłoszeń reklamacji operatorowi. Termin: 25 maja 2026.", "assignee": "a6", "closed": ""}, {"text": "Potwierdzić wymogi przekazywania danych operatorowi, możliwość numeru pośredniego, retencję, role dostępowe i dziennik zmian; ustalić, czy wspólne konto sklepu może być użyte bez ujawniania danych wszystkim pracownikom. Termin: 25 maja 2026.", "assignee": "devB", "closed": ""}, {"text": "Opracować instrukcję kompletacji i pakowania oraz przeprowadzić szkolenie zespołu Brzozowa; określić materiały (torby, kartony, plomby/taśma), identyfikację paczki bez danych osobowych i wymagane urządzenie przy stanowisku. Termin: 29 maja 2026.", "assignee": "a2", "closed": ""}, {"text": "Ustalić przed startem publicznym progi sukcesu pilotażu i zatwierdzić komunikację klienta, w tym opłatę, minimalny koszyk, listę kategorii wykluczonych i brak promocji albo jej uzasadniony wariant. Termin: przed decyzją o starcie; konkretnej daty i właściciela końcowego zatwierdzenia nie ustalono.", "assignee": "", "closed": ""}];
-    function softwareDrafts() {
+    function softwareMeetings() {
       const orders = fixture("internal-orders","Uruchomienie prac nad modułem zamówień wewnętrznych",0,
         ["dev","analyst","devB","pm"],
         "Zespół ustalił zakres pierwszej wersji modułu zgłoszeń sprzętu i materiałów. Pierwszy sprint obejmie formularz, listę zgłoszeń i zmianę statusu.","");
@@ -352,17 +352,40 @@
       });
       return [orders,quality];
     }
+    function acceptanceDraft() {
+      const draft = fixture("internal-orders-acceptance","Plan testów odbiorczych modułu zamówień",0,
+        ["pm","dev","analyst","devB"],
+        "Zespół uzgodnił, jak sprawdzić moduł zamówień wewnętrznych przed demonstracją. Próba odbędzie się na środowisku testowym i obejmie cały przebieg zgłoszenia.","");
+      return Object.assign(draft,{
+        host:"pm",
+        decisions:"Wszystkie poprawne zgłoszenia z próby muszą przejść pełny cykl. Błąd, który blokuje zapis lub zmianę statusu, wstrzymuje demonstrację.",
+        questions:"Czy po odświeżeniu danych testowych konta zachowają role potrzebne do próby?",
+        tasks:[
+          {text:"Przygotować scenariusze odbioru dla poprawnego zgłoszenia, braku uzasadnienia i próby zapisania ilości zero.",assignee:"analyst",closed:""},
+          {text:"Sprawdzić na telefonie i komputerze, czy można złożyć zgłoszenie oraz odfiltrować listę po zmianie statusu.",assignee:"dev",closed:""},
+          {text:"Sprawdzić, czy dwukrotne kliknięcie Zapisz tworzy tylko jedno zgłoszenie, i opisać wynik próby w notatkach testowych.",assignee:"devB",closed:""}
+        ]
+      });
+    }
     const storageKey = "meetly-element-demo-v2";
     function saveState(meetings, queue) {
-      try { localStorage.setItem(storageKey, JSON.stringify({meetings,queue,softwareDraftsAdded:true})); } catch {}
+      try { localStorage.setItem(storageKey, JSON.stringify({meetings,queue,pmDemoAdded:true})); } catch {}
     }
     function load() {
       try {
         const saved = localStorage.getItem(storageKey);
         if (saved) {
           const state = JSON.parse(saved);
-          if (!state.softwareDraftsAdded) {
-            state.queue.push(...softwareDrafts());
+          if (!state.pmDemoAdded) {
+            const software = softwareMeetings();
+            for (const example of software) {
+              const pending = state.queue.find(meeting => meeting.id === example.id);
+              if (!state.meetings.some(meeting => meeting.id === example.id) && (pending || !state.softwareDraftsAdded)) {
+                state.meetings.unshift(pending || example);
+              }
+            }
+            state.queue = state.queue.filter(meeting => !software.some(example => example.id === meeting.id));
+            state.queue.push(acceptanceDraft());
             saveState(state.meetings,state.queue);
           }
           return state;
@@ -373,14 +396,15 @@
         tasks:deliveryTasks.map(task=>({...task}))});
       const review = fixture("review","Przegląd gotowości pilotażu dostaw",0,["analyst","pm"],"Zespół sprawdził gotowość do testów wewnętrznych.","Potwierdzić datę próby w sklepie.");
       review.host = "analyst";
-      return {queue:[delivery,review,...softwareDrafts()],meetings:[
+      return {queue:[delivery,review,acceptanceDraft()],meetings:[
+        ...softwareMeetings(),
         fixture("integration","Integracja z operatorem dostaw",0,["dev","devB"],"Ustalono zakres testów statusów dostawy oraz dostępności kurierów.","Sprawdzić import statusów dostawy."),
         fixture("orders","Test koszyków w sklepie",0,["analyst","dev"],"Porównano czasy kompletacji małych i dużych koszyków.","Zebrać czasy kompletacji.",true),
         fixture("pilot","Założenia pilotażu dostaw",16,["devB","pm"],"Uzgodniono pilotaż w jednym sklepie.","Przygotować listę warunków publicznego startu.")
       ]};
     }
     let {meetings,queue} = load();
-    let account = "dev";
+    let account = "pm";
     let selectedId = "";
     let draftId = "";
     let view = "overview";
@@ -603,6 +627,7 @@
       if (task && canDeleteTask(meeting, task)) confirmRemoval(meeting, task);
     };
     get("account").innerHTML = Object.entries(accounts).map(([id,name]) => '<option value="'+id+'">'+escape(name)+'</option>').join("");
+    get("account").value = account;
     get("account").onchange = event => {
       account = event.target.value;
       draftId = "";
