@@ -29,7 +29,7 @@ Zachowania porównano z [aktualną specyfikacją](SPEC.md) i [kartą F04](docs/f
 ## Ustalenia po raporcie — 22 listopada 2026 r.
 
 - **T2-01.** Spotkanie może zainicjować każdy członek zespołu. Uczestnik z aktualnym dostępem może usunąć spotkanie dla wszystkich po potwierdzeniu. Nagranie źródłowe podlega osobnej retencji. Dopóki znajduje się na chronionym dysku, może posłużyć do ponownego importu. Prototyp symuluje usunięcie. Ponowny import opisano w specyfikacji integracji.
-- **T2-02.** Odebranie dostępu do wyniku nadal pozwala wykonawcy zobaczyć jego przydzielone zadanie. Jawne usunięcie zadania przez PM powoduje jego zniknięcie z wszystkich profili i raportów. Wcześniejsze i nowsze zadanie można rozróżnić przez jawne usunięcie nieaktualnej pozycji.
+- **T2-02.** Odebranie dostępu do spotkania ukrywa przypisane zadania pochodzące z niego w widokach tej osoby. Jawne usunięcie zadania przez PM albo jego wykonawcę z aktualnym dostępem powoduje jego zniknięcie z wszystkich profili i raportów. Wcześniejsze i nowsze zadanie można rozróżnić przez jawne usunięcie nieaktualnej pozycji.
 - **T2-03.** Osoba inicjująca widzi wszystkie zadania w szczegółach swojego spotkania, o ile nadal ma do niego dostęp. Na własnej liście widzi zadania przypisane do siebie.
 - **T2-04.** Zapis pozostaje lokalny w prototypie.
 

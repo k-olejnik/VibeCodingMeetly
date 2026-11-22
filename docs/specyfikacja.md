@@ -52,7 +52,7 @@ Wcześniejszy prototyp z transkrypcją w Meetly ma notatki autorki, test jednego
 | Programista | Zatwierdzone spotkania, do których ma dostęp, oraz własne zadania | Wynik zainicjowanego spotkania | Własny szkic wyniku | Spotkania, w których uczestniczył i do których ma dostęp |
 | Analityk | Zatwierdzone spotkania, do których ma dostęp, oraz własne zadania | Wynik zainicjowanego spotkania | Własny szkic wyniku | Spotkania, w których uczestniczył i do których ma dostęp |
 
-Dostęp dla uczestników ustala zapis kont połączonych w chwili „bot start”. Rozłączenie po starcie nie odbiera dostępu. Dostęp do spotkania mogą zmieniać uczestnicy z listy startowej, którzy mają do niego dostęp, oraz PM i dyrektor. Użytkownik spoza listy startowej, któremu przyznano dostęp, uzyskuje prawo odczytu. PM i dyrektor mają dostęp wynikający z roli. Serwer egzekwuje te reguły także przy odczycie bezpośrednim.
+Dostęp dla uczestników ustala zapis kont połączonych w chwili „bot start”. Rozłączenie po starcie nie odbiera dostępu. Dostęp do spotkania mogą zmieniać uczestnicy z listy startowej, którzy mają do niego dostęp, oraz PM i dyrektor. Użytkownik spoza listy startowej, któremu przyznano dostęp, uzyskuje prawo odczytu. PM i dyrektor mają dostęp wynikający z roli. Odebranie skutecznego dostępu do spotkania odbiera również dostęp do jego zadań. Wykonawca z aktualnym dostępem może usunąć własne zadanie, a PM może usunąć dowolne. Serwer egzekwuje te reguły także przy odczycie bezpośrednim.
 
 Każdy członek zespołu może zainicjować spotkanie. Inicjator to uczestnik, który rozpoczął spotkanie, i może zatwierdzić szkic tego spotkania. W szczegółach zainicjowanego spotkania widzi wszystkie zadania, jeśli nadal ma dostęp do wyniku.
 
@@ -135,7 +135,7 @@ Pozycja wynikająca ze spotkania. Opis może oznaczać nowe działanie albo zmia
 | spotkanie | źródłowa sesja, jeśli zadanie powstało ze spotkania | odwołanie do Spotkania | nie | „Planowanie wydania” | pośrednio P2 | aplikacja | przypisana osoba z dostępem do spotkania, PM, dyrektor |
 | stan | aktualny etap zadania | wybór: otwarte, zamknięte | tak | otwarte | zwykłe | aplikacja przy utworzeniu; PM później | przypisana osoba, PM, dyrektor |
 
-Nie powstaje zadanie bez wskazanej osoby odpowiedzialnej. AI ma wtedy dodać sprawę do „tematów do wyjaśnienia”. PM może dodać ręcznie zadanie już wykonane, wskazując osobę odpowiedzialną; jego źródłem jest wtedy „dodane ręcznie przez PM”. PM może jawnie usunąć pojedyncze zadanie po potwierdzeniu. Usunięcie obejmuje wszystkie profile, szczegóły spotkania i raporty oraz historię zmian tego zadania. Jeśli kolejne spotkanie zmieniło zadanie, człowiek może usunąć poprzednią pozycję i zachować nową. Import i AI nie zastępują zadań automatycznie. Odebranie dostępu do spotkania pozostawia przypisane zadanie bez danych spotkania źródłowego. Tryb zgłaszania usunięcia danych pozostaje do ustalenia (Q1). Usunięcie spotkania usuwa zadania pochodzące z tego spotkania i historię ich zmian. Ręczne zadania PM mają osobne źródło.
+Nie powstaje zadanie bez wskazanej osoby odpowiedzialnej. AI ma wtedy dodać sprawę do „tematów do wyjaśnienia”. PM może dodać ręcznie zadanie już wykonane, wskazując osobę odpowiedzialną; jego źródłem jest wtedy „dodane ręcznie przez PM”. PM lub osoba przypisana do zadania z aktualnym dostępem do spotkania może usunąć je po potwierdzeniu. Usunięcie obejmuje wszystkie profile, szczegóły spotkania i raporty oraz historię zmian tego zadania. Jeśli kolejne spotkanie zmieniło zadanie, człowiek może usunąć poprzednią pozycję i zachować nową. Import i AI nie zastępują zadań automatycznie. Po odebraniu dostępu do spotkania zadanie znika z widoków tej osoby, a serwer odrzuca bezpośredni odczyt i próbę jego usunięcia. Rekord pozostaje dostępny dla pozostałych uprawnionych. Tryb zgłaszania usunięcia danych pozostaje do ustalenia (Q1). Usunięcie spotkania usuwa zadania pochodzące z tego spotkania i historię ich zmian. Ręczne zadania PM mają osobne źródło.
 
 ### Zmiana zadania
 
@@ -160,13 +160,13 @@ Raport tygodniowy nie jest osobną kopią danych. Dla wybranego tygodnia pokazuj
 
 **Niezmienniki:**
 
-- N1: Programista i analityk widzą zatwierdzony wynik wyłącznie przy dostępie do spotkania i widzą wyłącznie własne zadania na listach zadań. W szczegółach zainicjowanego spotkania inicjator z dostępem widzi wszystkie zadania tego spotkania. Test obejmuje listę spotkań i bezpośredni odczyt po stronie serwera.
+- N1: Programista i analityk widzą zatwierdzony wynik wyłącznie przy dostępie do spotkania i widzą na listach wyłącznie własne zadania ze spotkań, do których mają dostęp. W szczegółach zainicjowanego spotkania inicjator z dostępem widzi wszystkie zadania tego spotkania. Test obejmuje listę spotkań i bezpośredni odczyt po stronie serwera.
 - N2: PM i dyrektor widzą wszystkie zatwierdzone wyniki oraz zadania zespołu — test kont roli PM i dyrektora.
 - N3: Surowa transkrypcja robocza jest dostępna wyłącznie dla inicjatora przed zatwierdzeniem oraz dla procesu generowania szkicu.
 - N4: AI nie publikuje ani nie nadpisuje wyniku; zapis następuje wyłącznie po zatwierdzeniu przez inicjatora — test.
 - N5: Meetly usuwa transkrypcję po zatwierdzeniu lub porzuceniu wyniku. Nagranie pozostaje na chronionym dysku integracji i jest automatycznie usuwane po 30 dniach.
 - N6: Treść spotkań, e-maile i dane logowania nie trafiają do logów, komunikatów błędów, adresów URL ani nazw plików — przegląd testów i zmienionych plików.
-- N7: Tylko PM może dodać ręczne zadanie, zmienić stan zadania lub usunąć pojedyncze zatwierdzone zadanie. Każda zmiana stanu tworzy historię. Test obejmuje konto PM i pozostałe role.
+- N7: Tylko PM może dodać ręczne zadanie lub zmienić stan zadania. Zatwierdzone zadanie może usunąć PM albo wykonawca mający dostęp do spotkania źródłowego. Każda zmiana stanu tworzy historię. Test obejmuje konto PM i pozostałe role.
 
 **Zasady dla agenta programującego:**
 
@@ -224,6 +224,7 @@ Kierunek wyglądu opisuje [DESIGN.md](../DESIGN.md). Układ, nazwy i miejsca gł
 - DEC-10 · 05.11.2026: Meetly przechowuje historię zatwierdzonych wyników i zadań; PM może ręcznie dodać wykonane zadanie oraz zamykać lub ponownie otwierać zadania. Raport tygodniowy pokazuje zamknięte i otwarte zadania według osób — źródło: właściciel projektu. Zmienia zakres MVP z wersji 1.
 - DEC-11 · 18.11.2026: Spotkania w Meetly są dostępne przez 6 miesięcy. Uczestnik z listy obecności i z aktualnym dostępem może je usunąć wcześniej po potwierdzeniu. Usunięcie obejmuje wynik, zadania ze spotkania i historię ich zmian. Uczestnik danego spotkania, PM i dyrektor mogą zmieniać jego listę dostępu. Historia spotkań ma filtr słów, dat od i do oraz filtr wieku w dniach, tygodniach lub miesiącach.
 - DEC-12 · 22.11.2026: Każdy członek zespołu może zainicjować spotkanie. Inicjator z dostępem widzi wszystkie zadania w szczegółach swojego spotkania. Po usunięciu zadania znika ono u wszystkich. Jeżeli spotkanie usunięto przez przypadek, nagranie z chronionego dysku można ponownie zaimportować do upływu jego retencji.
+- DEC-13 · 22.11.2026: PM i przypisana osoba z dostępem mogą usunąć zadanie dla wszystkich po potwierdzeniu. Odebranie dostępu do spotkania odbiera dostęp do wszystkich jego zadań tej osobie.
 - A1: Inicjator informuje uczestników o nagrywaniu, transkrypcji i AI przed komendą „bot start”.
 - A2: Tytuł spotkania ma od 1 do 120 znaków. Źródło tytułu potwierdza Faza A.
 - A3: Gdy AI nie przypisze zadania pewnie do konta, tworzy temat do wyjaśnienia zamiast zadania bez właściciela — szczegół wykonawczy do F03.

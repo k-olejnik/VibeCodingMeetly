@@ -8,7 +8,7 @@ Meetly pomaga małemu zespołowi programistycznemu zachować ustalenia ze spotka
 
 - Inicjator korzysta z Element podczas spotkania, a po nim otwiera Meetly w przeglądarce na komputerze lub telefonie. Pierwsza wersja jest po polsku i obejmuje jeden mały zespół. Założenie czasowe to tydzień pracy nad pierwszą wersją.
 - Każdy członek zespołu może zainicjować spotkanie. Inicjator oznacza osobę, która je rozpoczęła. Przed nagraniem inicjator informuje uczestników o nagrywaniu, transkrypcji i AI. „Bot start” zapisuje obecność w chwili startu i uruchamia nagranie, a „bot stop” lub koniec rozmowy kończy nagranie. Bot przekazuje do Meetly transkrypcję i metadane.
-- Inicjator widzi własny szkic. Po zatwierdzeniu wynik widzą PM, dyrektor i osoby z dostępem do danego spotkania. Domyślny dostęp uczestników wynika z listy startowej i zweryfikowanego powiązania kont. Uczestnik z listy startowej, który ma dostęp, oraz PM i dyrektor mogą zmieniać listę dostępu. Osoba z ręcznie przyznanym dostępem widzi wynik, a programista i analityk widzą wyłącznie własne zadania. PM i dyrektor widzą zadania zespołu. Tylko PM zmienia stan zadań i dodaje ręcznie wykonane zadania. Inicjator z dostępem do wyniku widzi wszystkie zadania w szczegółach swojego spotkania.
+- Inicjator widzi własny szkic. Po zatwierdzeniu wynik widzą PM, dyrektor i osoby z dostępem do danego spotkania. Domyślny dostęp uczestników wynika z listy startowej i zweryfikowanego powiązania kont. Uczestnik z listy startowej, który ma dostęp, oraz PM i dyrektor mogą zmieniać listę dostępu. Osoba z ręcznie przyznanym dostępem widzi wynik, a programista i analityk widzą na liście wyłącznie własne zadania ze spotkań, do których mają aktualny dostęp. PM i dyrektor widzą zadania zespołu. Tylko PM zmienia stan zadań i dodaje ręcznie wykonane zadania. Inicjator z dostępem do wyniku widzi wszystkie zadania w szczegółach swojego spotkania.
 - Nagranie na chronionym dysku integracji jest usuwane po 30 dniach. Meetly usuwa roboczą transkrypcję po zatwierdzeniu albo porzuceniu szkicu. Zatwierdzone spotkanie jest usuwane po 6 miesiącach kalendarzowych od zakończenia. Uczestnik z listy obecności przy „bot start” i z aktualnym dostępem może usunąć je wcześniej dla wszystkich razem z wynikiem, zadaniami i historią ich zmian. Meetly prosi o potwierdzenie. Jeżeli nagranie zachowało się na chronionym dysku, można je ponownie zaimportować jako nowy szkic.
 - [DO USTALENIA: w Fazie A potwierdzić dostęp bota do dźwięku i listy uczestników, mapowanie kont z Element na konta Meetly oraz źródło tytułu spotkania].
 - [DO USTALENIA: przed użyciem prawdziwych danych uzgodnić retencję kopii tekstu u bota lub dostawcy oraz sposób zgłaszania usunięcia danych].
@@ -25,7 +25,9 @@ Szczegółowe role, model danych, reguły P2 oraz ograniczenia dla integracji i 
 | Edycja i zatwierdzenie szkicu przez inicjatora |  | Powiadomienia e-mailowe lub w komunikatorze — zespół sprawdza wynik i zadania w aplikacji. |
 | Odczyt zatwierdzonego wyniku i przypisanych zadań |  | Archiwum pełnych transkrypcji, cytaty i rozpoznawanie mówców — MVP używa transkrypcji przejściowo, a historia służy ustaleniom. |
 
-**Zadania po zatwierdzeniu:** PM może usunąć nieaktualne zadanie. Po potwierdzeniu znika ono ze wszystkich profili i raportów. Jeśli późniejsze spotkanie ustaliło nowe zadanie, można jawnie usunąć poprzednie. Nowe zadanie pozostaje na liście. Meetly rozpoznaje zadania po rekordzie, bez automatycznego zastępowania po treści.
+**Zadania po zatwierdzeniu:** PM lub osoba, której przypisano zadanie i która ma dostęp do spotkania, może usunąć nieaktualne zadanie. Po potwierdzeniu znika ono ze wszystkich profili i raportów. Jeśli późniejsze spotkanie ustaliło nowe zadanie, można jawnie usunąć poprzednie. Nowe zadanie pozostaje na liście. Meetly rozpoznaje zadania po rekordzie, bez automatycznego zastępowania po treści.
+
+Odebranie dostępu do spotkania ukrywa jego zadania dla danej osoby. Pozostali uprawnieni nadal mogą je zobaczyć.
 
 **Uzgodniony zakres MVP poza główną ścieżką:** historia spotkań i zadań, filtry słów, dat i wieku spotkania, zmiana listy dostępu po zatwierdzeniu, wcześniejsze usuwanie i retencja, ręczne dodawanie wykonanych zadań i zmiana ich stanu przez PM, raport tygodniowy dla PM i dyrektora. Te funkcje pozostają w MVP na podstawie DEC-10 i DEC-11. Zaliczenie głównej ścieżki można sprawdzić bez nich.
 
@@ -117,6 +119,10 @@ Jako członek zespołu chcę wrócić do zatwierdzonych ustaleń i przypisanych 
 - **K3.** W historii osób uprawnionych pojawiają się tylko wyniki zatwierdzone przez inicjatora.
 
   **Sprawdzam:** porównuję historię, gdy jeden wynik jest szkicem, a drugi został zatwierdzony. Zaliczone, gdy drugi jest widoczny, a pierwszy znajduje się wyłącznie w kolejce inicjatora.
+
+- **K4.** Gdy osoba traci dostęp do spotkania, znika ono z jej historii, a przypisane jej zadania z tego spotkania znikają z jej listy.
+
+  **Sprawdzam:** odbieram Analitykowi A dostęp i ponownie otwieram jego historię oraz listę zadań. Zaliczone, gdy nie widzi ani spotkania, ani jego zadań, a PM nadal je widzi.
 
 Szczegółowe przypadki, w tym filtry, usuwanie, retencję, stany zadań i raport, opisują [karty F00–F05](docs/funkcje/).
 

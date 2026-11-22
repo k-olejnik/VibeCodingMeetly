@@ -1,7 +1,7 @@
 # F05 · Historia zadań i raport tygodniowy
 
 **Status:** do zrobienia · **Priorytet:** MVP-1 · **Złożoność:** wysoka → poziom Wysoki — zmienia trwałe dane P2, wprowadza historię zmian i egzekwuje nowe uprawnienie PM.
-**Zależy od:** F04 · **Źródło:** DEC-10, DEC-12, A4, N7.
+**Zależy od:** F04 · **Źródło:** DEC-10, DEC-12, DEC-13, A4, N7.
 
 ## Do przeczytania
 
@@ -20,7 +20,7 @@ PM ma historię zadań oraz czytelny raport tygodniowy: co zostało zamknięte, 
 5. PM może dodać ręcznie wykonane zadanie: wpisuje treść, wybiera osobę odpowiedzialną i zapisuje je jako zamknięte. Zdarzenie zamknięcia trafia do raportu tygodniowego.
 6. Dyrektor może czytać E7, ale nie może dodawać ani zmieniać zadań. Pozostałe role nie mają dostępu do E7.
 
-7. PM może usunąć pojedyncze zatwierdzone zadanie w szczegółach spotkania po potwierdzeniu. Jeżeli późniejsze spotkanie zmieniło ustalenia, może jawnie usunąć wcześniejsze zadanie. Nowe zadanie pozostaje niezależnym rekordem.
+7. PM może usunąć pojedyncze zatwierdzone zadanie po potwierdzeniu. Przypisana osoba może je usunąć, jeśli nadal ma dostęp do spotkania źródłowego. Akcja jest dostępna w „Zadaniach” i w szczegółach spotkania. Jeżeli późniejsze spotkanie zmieniło ustalenia, może jawnie usunąć wcześniejsze zadanie. Nowe zadanie pozostaje niezależnym rekordem.
 
 ## Dane
 
@@ -37,7 +37,7 @@ Czyta Zadanie i Zmianę zadania. Tworzy ręczne Zadanie ze źródłem „dodane 
 
 - [test]: Po usunięciu spotkania raport i historia pomijają jego zadania oraz zdarzenia zmiany stanu. Ręcznie dodane zadanie PM jest nadal widoczne.
 
-- F05-KA7 [test, ręcznie]: Gdy istnieją wcześniejsze i nowsze zadanie, PM usuwa wcześniejsze i potwierdza. Wcześniejsza pozycja znika z list wszystkich osób, szczegółów spotkania i raportów, a nowsza pozostaje. Dyrektor, programista i analityk nie mogą wykonać tej operacji.
+- F05-KA7 [test, ręcznie]: Gdy istnieją wcześniejsze i nowsze zadanie, PM usuwa wcześniejsze i potwierdza. Wcześniejsza pozycja znika z list wszystkich osób, szczegółów spotkania i raportów, a nowsza pozostaje. W osobnej próbie wcześniejsze zadanie może usunąć też jego wykonawca z aktywnym dostępem. Inne osoby i wykonawca po utracie dostępu do spotkania nie mogą go usunąć.
 
 ## Przypadki brzegowe i błędy
 

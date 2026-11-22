@@ -1,7 +1,7 @@
 # F04 · Widoki wyników zależne od roli
 
 **Status:** do zrobienia · **Priorytet:** MVP-1 · **Złożoność:** wysoka → poziom Wysoki — prezentuje dane P2 różnym rolom i musi egzekwować dostęp poza interfejsem.
-**Zależy od:** F01, F03 · **Źródło:** DEC-3, DEC-8, DEC-11, DEC-12, N1, N2.
+**Zależy od:** F01, F03 · **Źródło:** DEC-3, DEC-8, DEC-11, DEC-12, DEC-13, N1, N2.
 
 ## Do przeczytania
 
@@ -14,7 +14,7 @@ Każda osoba otrzymuje po zalogowaniu tylko taki zakres zatwierdzonych wyników 
 ## Zachowanie
 
 1. PM i dyrektor widzą na E2 historię zatwierdzonych spotkań, a po otwarciu E6: skrót, decyzje, tematy do wyjaśnienia oraz wszystkie zadania z ich aktualnym stanem.
-2. Programista i analityk widzą na E2 listę wyłącznie własnych zadań: treść, opcjonalny termin, źródło i aktualny stan.
+2. Programista i analityk widzą na E2 listę wyłącznie własnych zadań z dostępnych spotkań oraz zadań bez spotkania. Lista pokazuje treść, opcjonalny termin, źródło i aktualny stan.
 3. Programista i analityk widzą zatwierdzone spotkanie i jego podsumowanie, decyzje oraz tematy do wyjaśnienia, jeśli są na jego aktualnej liście dostępu. Domyślnie lista obejmuje konta połączone w chwili „bot start”. Listę dostępu mogą zmieniać uczestnicy z listy startowej z aktywnym dostępem oraz PM i dyrektor. Dostęp przyznany osobie spoza listy startowej pozwala jej odczytać wynik. Uprawnienia PM i dyrektora wynikają z roli.
 4. Widoki pokazują wyłącznie zatwierdzone wyniki; sesje „przetwarzanie”, „do zatwierdzenia” i „odrzucone” nie trafiają do historii innych osób.
 
@@ -25,13 +25,13 @@ Każda osoba otrzymuje po zalogowaniu tylko taki zakres zatwierdzonych wyników 
 
 ## Dane
 
-Czyta Wynik spotkania i Zadania. PM oraz dyrektor odczytują wszystkie zatwierdzone rekordy zespołu. Programista i analityk odczytują wyniki spotkań zgodnie z listą dostępu oraz własne zadania. Wyjątek dla inicjatora dotyczy szczegółów jego spotkania, do którego ma dostęp. Jeżeli widzą własne zadanie bez dostępu do spotkania, API pomija tytuł i odnośnik do spotkania. Reguła dostępu jest egzekwowana przez bazę lub serwer.
+Czyta Wynik spotkania i Zadania. PM oraz dyrektor odczytują wszystkie zatwierdzone rekordy zespołu. Programista i analityk odczytują wyniki spotkań zgodnie z listą dostępu oraz własne zadania. Wyjątek dla inicjatora dotyczy szczegółów jego spotkania, do którego ma dostęp. Odebranie dostępu do spotkania usuwa z widoków tej osoby także wszystkie zadania z tego spotkania. API odrzuca ich bezpośredni odczyt. Reguła dostępu jest egzekwowana przez bazę lub serwer.
 
 ## Kryteria akceptacji
 
 - F04-KA1 [test, ręcznie]: Gdy PM A albo Dyrektor A otworzy zatwierdzony wynik, to widzi pełny skrót, decyzje, tematy do wyjaśnienia oraz zadania przypisane do wszystkich osób z ich stanem.
 - F04-KA2 [test, ręcznie]: Gdy Programista A otworzy E2, to widzi swoje zadanie „Uzupełnij opis scenariusza logowania” ze stanem, ale nie widzi zadania Analityk A.
-- F04-KA3 [test]: Gdy Programista A spróbuje odczytać wynik spotkania bez dostępu lub cudze zadanie poza szczegółami zainicjowanego spotkania, serwer odrzuca żądanie. Po dodaniu dostępu wynik staje się widoczny, a po odebraniu znika z listy i bezpośredniego odczytu.
+- F04-KA3 [test]: Gdy Programista A spróbuje odczytać wynik spotkania bez dostępu lub cudze zadanie poza szczegółami zainicjowanego spotkania, serwer odrzuca żądanie. Po dodaniu dostępu wynik staje się widoczny, a po odebraniu wynik i zadania tego spotkania znikają z list i bezpośredniego odczytu dla Programisty A. Pozostali uprawnieni nadal je widzą.
 - F04-KA4 [test]: Gdy Analityk A nie ma przypisanych zadań, to widzi stan pusty „Nie masz jeszcze zadań ze spotkań”, bez listy cudzych zadań.
 - F04-KA5 [test]: Gdy inicjator nie zatwierdzi wyniku, to PM, dyrektor, programista i analityk nie widzą go w swoich widokach.
 

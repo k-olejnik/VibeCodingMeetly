@@ -349,7 +349,11 @@
     const canRead = meeting => privileged() || meeting.access.includes(account);
     const canEditAccess = meeting => privileged() || (canRead(meeting) && meeting.participants.includes(account));
     const canDeleteMeeting = meeting => canRead(meeting) && meeting.participants.includes(account);
-    const visibleTasks = meeting => meeting.tasks.filter(task => privileged() || task.assignee === account);
+    function visibleTasks(meeting) {
+      if (!canRead(meeting)) return [];
+      return privileged() ? meeting.tasks : meeting.tasks.filter(task => task.assignee === account);
+    }
+    const canDeleteTask = (meeting, task) => canRead(meeting) && (account === "pm" || task.assignee === account);
     function persist() {
       try { localStorage.setItem(storageKey, JSON.stringify({meetings,queue})); } catch {}
     }
@@ -489,8 +493,17 @@
     function taskRows(rows, actions = () => "") {
       return rows.length ? '<ul>'+rows.map((task, index) => '<li>'+escape(task.text)+' · '+escape(accounts[task.assignee])+' · '+(task.closed ? 'Zamknięte' : 'Otwarte')+actions(index)+'</li>').join("")+'</ul>' : '<p class="empty">Brak zadań.</p>';
     }
+    function deleteTaskAction(meeting, task) {
+      if (!canDeleteTask(meeting, task)) return "";
+      return ' <button class="text-button" type="button" data-meeting="'+escape(meeting.id)+
+        '" data-delete-task="'+meeting.tasks.indexOf(task)+'">Usuń zadanie</button>';
+    }
     function renderTasks() {
-      get("taskList").innerHTML = taskRows(meetings.flatMap(visibleTasks));
+      const rows = meetings.flatMap(meeting => visibleTasks(meeting).map(task => ({meeting, task})));
+      get("taskList").innerHTML = taskRows(rows.map(row => row.task), index => {
+        const {meeting, task} = rows[index];
+        return deleteTaskAction(meeting, task);
+      });
     }
     function renderReport() {
       const start = new Date(get("weekDate").value + "T12:00:00");
@@ -522,9 +535,7 @@
       const meeting = meetings.find(item => item.id === selectedId && canRead(item));
       if (!meeting) { show("history"); return; }
       const detailTasks = meeting.host === account ? meeting.tasks : visibleTasks(meeting);
-      const taskAction = index => account === "pm"
-        ? ' <button class="text-button" type="button" data-delete-task="'+index+'">Usuń zadanie</button>'
-        : "";
+      const taskAction = index => deleteTaskAction(meeting, detailTasks[index]);
       const sections = [["Podsumowanie",meeting.summary],["Decyzje",meeting.decisions],["Tematy do wyjaśnienia",meeting.questions]];
       const accessForm = canEditAccess(meeting) ? '<form id="accessForm"><h2>Dostęp do spotkania</h2>'+
         accessChoices(meeting)+'<p class="muted">PM i dyrektor mają dostęp wynikający z roli.</p><button class="button secondary">Zapisz dostęp</button></form>' : "";
@@ -536,12 +547,6 @@
         (canDeleteMeeting(meeting) ? '<div class="actions"><button class="button danger" id="deleteMeeting">Usuń spotkanie</button></div>' : '');
       get("back").onclick = () => show("history");
       if (canDeleteMeeting(meeting)) get("deleteMeeting").onclick = () => confirmRemoval(meeting);
-      if (account === "pm") get("detail").querySelectorAll("[data-delete-task]").forEach(button => {
-        button.onclick = () => {
-          const task = meeting.tasks[Number(button.dataset.deleteTask)];
-          if (task) confirmRemoval(meeting, task);
-        };
-      });
       if (canEditAccess(meeting)) get("accessForm").onsubmit = event => {
         event.preventDefault();
         meeting.access = new FormData(event.target).getAll("member");
@@ -550,6 +555,13 @@
         show("detail");
       };
     }
+    get("taskList").onclick = get("detail").onclick = event => {
+      const button = event.target.closest("[data-delete-task]");
+      if (!button) return;
+      const meeting = meetings.find(item => item.id === button.dataset.meeting);
+      const task = meeting?.tasks[Number(button.dataset.deleteTask)];
+      if (task && canDeleteTask(meeting, task)) confirmRemoval(meeting, task);
+    };
     get("account").innerHTML = Object.entries(accounts).map(([id,name]) => '<option value="'+id+'">'+escape(name)+'</option>').join("");
     get("account").onchange = event => {
       account = event.target.value;
@@ -578,11 +590,11 @@
       pruneExpired();
       if (!meetings.includes(meeting)) return;
       if (task) {
-        if (account !== "pm" || !meeting.tasks.includes(task)) return;
+        if (!meeting.tasks.includes(task) || !canDeleteTask(meeting, task)) return;
         meeting.tasks = meeting.tasks.filter(item => item !== task);
         persist();
         notify("Usunięto zadanie dla wszystkich.");
-        show("detail");
+        show(view);
         return;
       }
       if (!canDeleteMeeting(meeting)) return;
