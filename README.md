@@ -4,11 +4,8 @@ Meetly pomaga zespołowi zamienić ustalenia ze spotkań w Element w podsumowani
 
 **Dokument do oceny:** [SPEC.md — specyfikacja MVP](SPEC.md)
 
-**[Otwórz prototyp Meetly](https://k-olejnik.github.io/VibeCodingMeetly/meetly-prototyp.html)** — działa w przeglądarce, bez pobierania i logowania.
-
 | Materiał | Co zawiera |
 | --- | --- |
-| [Plik źródłowy prototypu](meetly-prototyp.html) | Kod HTML demonstracji. |
 | [Transkrypcje demonstracyjne](transkrypcje-demo.md) | Dwa spotkania z historii i materiał do szkicu oczekującego na zatwierdzenie. |
 | [Raport z testu symulowanego](raport-testu-symulowanego.md) | Wyniki pierwszej symulacji i zasady przyjęte po zgłoszeniach T2. |
 | [Plan testu i weryfikacja techniczna](plan-testu-element.md) | Scenariusze oraz wyniki sprawdzenia logiki po poprawkach. Aktualna ścieżka czeka na niezależne testy z użytkownikami. |
