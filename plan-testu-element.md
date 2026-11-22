@@ -1,6 +1,6 @@
 # Meetly — test prototypu po imporcie z Element
 
-**Status:** nowa ścieżka czeka na niezależny test z użytkownikami. Wcześniejsza karta decyzji i notatki dotyczą prototypu z przyciskami „Rozpocznij spotkanie” i „Zakończ spotkanie”. Zawierają jeden test uczestnika, obserwacje autorki i osobno oznaczoną symulację agenta. Symulacja nie jest drugą obserwacją użytkownika.
+**Status:** nowa ścieżka czeka na niezależny test z użytkownikami. Wcześniejsza karta decyzji i notatki dotyczą prototypu z przyciskami „Rozpocznij spotkanie” i „Zakończ spotkanie”. Zawierają jeden test uczestnika, obserwacje autorki i osobno oznaczoną symulację agenta. Symulacja nie jest drugą obserwacją użytkownika. Aktualną ścieżkę sprawdził symulowany Tester nr 2. [Raport z przebiegu](raport-testu-symulowanego.md) zawiera wyniki i ocenę względem specyfikacji.
 
 ## Scenariusz
 
