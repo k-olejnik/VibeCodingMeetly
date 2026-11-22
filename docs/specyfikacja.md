@@ -1,8 +1,6 @@
 # Specyfikacja MVP: Meetly
 
-Wersja 5 · ustalenia po teście symulowanym z 22 listopada 2026 r.
-
-[SPEC.md](../SPEC.md) przedstawia tę wersję w formacie kursowym. Ten dokument rozwija model danych, ochronę danych i kryteria techniczne.
+Wersja 6 · 22 listopada 2026 r. · ujednolicenie dokumentacji
 
 ## 1. Cel i użytkownicy
 
@@ -10,11 +8,11 @@ Meetly pomaga małemu zespołowi zamknąć spotkanie jasnym zestawem ustaleń. B
 
 ## 2. Co pokazały testy
 
-Wcześniejszy prototyp z transkrypcją w Meetly ma notatki autorki, test jednego uczestnika i oddzielnie oznaczoną symulację agenta. Na obecnej ścieżce z Element brak udokumentowanego testu z użytkownikami. Scenariusz znajduje się w [planie testu](../plan-testu-element.md), a niesprawdzone założenia w sekcji 12.
+Wcześniejszy prototyp z transkrypcją w Meetly ma notatki autorki, test jednego uczestnika i oddzielnie oznaczoną symulację agenta. Na obecnej ścieżce z Element brak udokumentowanego testu z użytkownikami. Obserwacje i wynikające z nich poprawki zbierają [wnioski z testów](wnioski-z-testow.md). Scenariusz kolejnej próby jest w [planie testu](../plan-testu-element.md), a niesprawdzone założenia w sekcji 12.
 
 ## 3. Zakres MVP
 
-**Główna ścieżka MVP:** inicjator sprawdza obecność w Element → „bot start” → bot zapisuje listę połączonych kont i nagrywa → „bot stop” lub koniec rozmowy → bot dostarcza transkrypcję i listę → Meetly proponuje wynik → inicjator zatwierdza → uczestnicy, PM i dyrektor mają dostęp zgodnie z sekcją 4.
+**Główna ścieżka MVP:** inicjator sprawdza obecność i informuje o nagrywaniu, transkrypcji i AI → „bot start” → bot zapisuje listę połączonych kont i nagrywa → „bot stop” lub koniec rozmowy → bot dostarcza transkrypcję i listę → Meetly proponuje wynik → inicjator zatwierdza → uczestnicy, PM i dyrektor mają dostęp zgodnie z sekcją 4.
 
 **Czas na pierwszą wersję:** tydzień pracy.
 
@@ -32,6 +30,8 @@ Wcześniejszy prototyp z transkrypcją w Meetly ma notatki autorki, test jednego
 - zmiana stanu zadania przez PM i ręczne dodanie przez PM zadania już wykonanego;
 - raport tygodniowy: zamknięte zadania oraz otwarte zadania pogrupowane według osób;
 - automatyczne usuwanie nagrań z chronionego dysku po 30 dniach i roboczej transkrypcji z Meetly po zatwierdzeniu lub porzuceniu wyniku.
+
+**Opcjonalne w pierwszej wersji:** liczniki spotkań i zadań w Przeglądzie.
 
 **Później:**
 
@@ -69,7 +69,92 @@ Rola jest przypisana do konta przez właściciela projektu poza interfejsem MVP.
 | E6 | Zatwierdzony wynik spotkania | uczestnicy i inne osoby uprawnione, PM, dyrektor | tak | F04 |
 | E7 | Historia zadań i raport tygodniowy | PM; dyrektor tylko do odczytu | demonstracyjny raport | F05 |
 
-Główna ścieżka: spotkanie odbywa się w Element. Po imporcie inicjator otwiera szkic w E5. Po zatwierdzeniu E2 zawiera historię dostępnych spotkań z filtrami oraz zadania, E6 pokazuje zatwierdzony wynik zgodnie z uprawnieniami, a E7 służy do historii zadań i raportu.
+### Główna ścieżka w aplikacji
+
+1. **Logowanie (E1)** — użytkownik uwierzytelnia się i przechodzi do Przeglądu. W prototypie ten krok reprezentuje wybór konta demonstracyjnego.
+2. **Przegląd / Mój widok (E2)** — użytkownik widzi podsumowanie tygodnia, ostatnie spotkania i zadania zgodne z dostępem. Inicjator wybiera „Import z Element” z głównej nawigacji lub akcji w Przeglądzie.
+3. **Import z Element** — inicjator widzi kolejkę swoich spotkań do zatwierdzenia i wybiera „Sprawdź szkic”.
+4. **Wynik spotkania do zatwierdzenia (E5)** — inicjator poprawia treść, przypisania i listę dostępu. Podsumowanie jest po lewej, zadania po prawej. Na wąskim ekranie zadania są pod podsumowaniem. Puste decyzje i tematy do wyjaśnienia mają akcję dodania sekcji. Pola rosną z treścią. Pod listą dostępu pozostają „Zatwierdź wynik”, „Wróć do kolejki” i „Porzuć szkic”.
+5. **Zatwierdzony wynik spotkania (E6)** — po akcji „Zatwierdź wynik” prototyp pokazuje komunikat „Zatwierdzono wynik spotkania.” i szczegóły, jeśli inicjator ma do nich dostęp. Przy braku dostępu wraca do historii. Osoba uprawniona wraca do wyniku przez zakładkę „Spotkania”. Osoba odpowiedzialna widzi przypisane zadania w zakładce „Zadania”.
+
+### Historie użytkowników i kryteria akceptacji
+
+#### US1 · Logowanie i dostęp
+
+Jako członek zespołu chcę zalogować się na swoje konto, żeby zobaczyć wyniki i zadania w granicach moich uprawnień.
+
+- **K1.** Po poprawnym logowaniu użytkownik trafia do Przeglądu z danymi swojej roli.
+
+  **Sprawdzam:** loguję się na fikcyjne konto analityka, a potem PM. Zaliczone, gdy oba widzą Przegląd, a zakres danych odpowiada ich rolom.
+- **K2.** Otwarcie adresu chronionego wyniku bez sesji prowadzi do logowania bez ujawniania wyniku.
+
+  **Sprawdzam:** otwieram adres wyniku w oknie prywatnym. Zaliczone, gdy widzę logowanie i żadnej treści spotkania.
+- **K3.** Na liście zalogowanej osoby bez dostępu nie ma danego spotkania. Bezpośredni odczyt również jest zablokowany po stronie serwera.
+
+  **Sprawdzam:** otwieram listę i znany adres wyniku na fikcyjnym koncie bez dostępu. Zaliczone, gdy spotkania nie ma na liście i serwer nie zwraca jego treści.
+
+#### US2 · Import z Element
+
+Jako inicjator chcę uzyskać szkic po zakończeniu nagrania w Element, żeby móc sprawdzić ustalenia w Meetly.
+
+- **K1.** Nagranie rozpoczyna się dopiero po „bot start”. Lista wejściowa zawiera konta połączone w chwili komendy, z pominięciem bota.
+
+  **Sprawdzam:** w fikcyjnym spotkaniu dołączam dwoma kontami i wysyłam „bot start”. Zaliczone, gdy nagranie zaczyna się po komendzie, a w szkicu widać obydwa konta i brak konta bota.
+- **K2.** „Bot stop” i koniec połączenia kończą nagranie, a przyjęty import pojawia się raz w kolejce inicjatora.
+
+  **Sprawdzam:** wykonuję po jednym fikcyjnym spotkaniu dla obu sposobów zakończenia i ponawiam dostarczenie jednego importu. Zaliczone, gdy oba spotkania mają własne pozycje i powtórzony import nie dubluje pozycji.
+- **K3.** Niekompletny import ani import bez zweryfikowanego inicjatora nie wystawia szkicu do zatwierdzenia.
+
+  **Sprawdzam:** wysyłam fikcyjne importy z brakującą transkrypcją i bez powiązania inicjatora. Zaliczone, gdy kolejki testowych kont nie pokazują tych szkiców.
+
+#### US3 · Szkic proponowany przez AI
+
+Jako inicjator chcę zobaczyć propozycję wyniku, żeby zweryfikować decyzje i odpowiedzialność przed jej udostępnieniem.
+
+- **K1.** Po przetworzeniu importu szkic pokazuje skrót i zadania, a decyzje i tematy do wyjaśnienia pokazuje, kiedy są wypełnione.
+
+  **Sprawdzam:** otwieram dwa fikcyjne szkice, jeden z decyzją i otwartym tematem, drugi bez nich. Zaliczone, gdy pierwszy pokazuje treść obu sekcji, a drugi pokazuje akcje ich dodania bez pustych pól.
+- **K2.** Zadanie bez pewnego wykonawcy trafia do tematów do wyjaśnienia.
+
+  **Sprawdzam:** używam przykładu, w którym podano działanie bez osoby odpowiedzialnej. Zaliczone, gdy działanie można znaleźć w tematach do wyjaśnienia i brak zapisanego zadania bez właściciela.
+- **K3.** Błąd generowania daje komunikat i możliwość ponowienia, a wynik pozostaje niezatwierdzony.
+
+  **Sprawdzam:** wywołuję błąd przez atrapę usługi AI. Zaliczone, gdy inicjator widzi akcję ponowienia i spotkania nie ma w historii zatwierdzonych wyników.
+
+#### US4 · Edycja i zatwierdzenie
+
+Jako inicjator chcę poprawić szkic i go zatwierdzić, żeby zespół otrzymał zweryfikowany wynik.
+
+- **K1.** Po zatwierdzeniu zachowują się edytowany skrót, treść zadania i wybrana osoba odpowiedzialna.
+
+  **Sprawdzam:** zmieniam skrót i zadanie, przypisuję je Analitykowi A i zatwierdzam. Zaliczone, gdy szczegóły pokazują poprawiony skrót, a zadanie widnieje na liście Analityka A.
+- **K2.** Zatwierdzenie usuwa szkic z kolejki i pokazuje potwierdzenie. Wynik staje się dostępny zgodnie z listą dostępu i rolami.
+
+  **Sprawdzam:** zmieniam listę dostępu, zatwierdzam, wracam do kolejki i sprawdzam historię na wybranych kontach. Zaliczone, gdy widzę potwierdzenie, kolejka nie zawiera szkicu, a historia pokazuje wynik wyłącznie na uprawnionych kontach.
+- **K3.** Porzucenie szkicu usuwa go z kolejki i nie tworzy wyniku ani zadań.
+
+  **Sprawdzam:** wybieram „Porzuć szkic” na drugim fikcyjnym spotkaniu. Zaliczone, gdy szkic znika z kolejki, a wynik i zadania nie pojawiają się w pozostałych widokach.
+- **K4.** Długie pole zadania wyświetla cały tekst, a na telefonie panele są jeden pod drugim.
+
+  **Sprawdzam:** otwieram szkic z długim zadaniem na komputerze i telefonie. Zaliczone, gdy całą treść można przeczytać bez przewijania wewnątrz pola, a na telefonie panele mieszczą się w jednej kolumnie.
+
+#### US5 · Powrót do wyniku i zadań
+
+Jako członek zespołu chcę wrócić do zatwierdzonych ustaleń i przypisanych mi zadań, żeby wiedzieć, czym mam się zająć.
+
+- **K1.** Zakładka „Spotkania” pokazuje tytuł i datę dostępnego spotkania i pozwala otworzyć jego zatwierdzone podsumowanie.
+
+  **Sprawdzam:** loguję się jako uczestnik, otwieram „Spotkania” i wybieram wynik. Zaliczone, gdy data i tytuł zgadzają się z wynikiem, a widoczny skrót odpowiada zatwierdzonej treści.
+- **K2.** Analityk i programista widzą własne zadania w zakładce „Zadania”. Inicjator może zobaczyć zadania innych osób w szczegółach spotkania, które zainicjował, gdy nadal ma dostęp. PM i dyrektor widzą zadania całego zespołu.
+
+  **Sprawdzam:** po zatwierdzeniu po jednym zadaniu dla dwóch osób przełączam cztery fikcyjne konta. Zaliczone, gdy każda przypisana osoba widzi swoje zadanie, inicjator widzi oba w szczegółach spotkania, a PM i dyrektor widzą oba na liście zadań.
+- **K3.** W historii osób uprawnionych pojawiają się tylko wyniki zatwierdzone przez inicjatora.
+
+  **Sprawdzam:** porównuję historię, gdy jeden wynik jest szkicem, a drugi został zatwierdzony. Zaliczone, gdy drugi jest widoczny, a pierwszy znajduje się wyłącznie w kolejce inicjatora.
+
+- **K4.** Gdy osoba traci dostęp do spotkania, znika ono z jej historii, a przypisane jej zadania z tego spotkania znikają z jej listy.
+
+  **Sprawdzam:** odbieram Analitykowi A dostęp i ponownie otwieram jego historię oraz listę zadań. Zaliczone, gdy nie widzi ani spotkania, ani jego zadań, a PM nadal je widzi.
 
 ## 6. Model danych
 
@@ -195,9 +280,11 @@ Kierunek: aplikacja webowa z logowaniem, bazą danych i przetwarzaniem po stroni
 
 Faza A wybierze usługi oraz potwierdzi ich aktualne limity, regiony, obsługę bota i transkrypcji w Element, koszty, sposób bezpiecznego przekazania audio i tekstu do przetwarzania, sposób zmian struktury danych oraz zgodność z wymaganiami P2. Faza A ma też potwierdzić techniczną możliwość pozyskania dźwięku i listy obecności przez bota, uwierzytelnionego importu oraz usuwania nagrań po 30 dniach.
 
+Jeśli bot w docelowym środowisku Element nie może pozyskać dźwięku lub zweryfikowanej listy obecności, przed rozpoczęciem F02 trzeba uzgodnić inne źródło importu.
+
 ## 9. Wymagania ogólne
 
-Kierunek wyglądu opisuje [DESIGN.md](../DESIGN.md). Układ, nazwy i miejsca głównych akcji wynikają z [aktualnego prototypu](../meetly-prototyp.html) i ścieżki w [SPEC.md](../SPEC.md). Interfejs używa tekstu co najmniej 16 px, kontrastu WCAG AA i elementów klikalnych o wymiarze co najmniej 44 × 44 px. Meetly pokazuje stan importu i ewentualny błąd osobie uprawnionej. Komunikaty błędów są po polsku i nie ujawniają treści spotkania ani danych konta. Przy braku połączenia aplikacja nie oznacza transkrypcji ani wyniku jako gotowych.
+Kierunek wyglądu opisuje [DESIGN.md](../DESIGN.md). Układ, nazwy i miejsca głównych akcji wynikają z [aktualnego prototypu](../meetly-prototyp.html) i [głównej ścieżki w sekcji 5](#5-ekrany-i-ścieżki). Interfejs używa tekstu co najmniej 16 px, kontrastu WCAG AA i elementów klikalnych o wymiarze co najmniej 44 × 44 px. Meetly pokazuje stan importu i ewentualny błąd osobie uprawnionej. Komunikaty błędów są po polsku i nie ujawniają treści spotkania ani danych konta. Przy braku połączenia aplikacja nie oznacza transkrypcji ani wyniku jako gotowych.
 
 ## 10. Funkcje
 
@@ -273,9 +360,10 @@ Zweryfikuj funkcję Fxx. Przeczytaj AGENTS.md, jej kartę, sekcję 7 docs/specyf
 | README | `README.md` | teraz, aktualizowany w Fazie B | opis, stan kart i brak sekretów |
 | Specyfikacja i karty | `docs/specyfikacja.md`, `docs/funkcje/` | teraz | aktualna wersja i karta dla każdej funkcji |
 | Zasady dla agentów | `AGENTS.md`, `CLAUDE.md` | teraz | zasady P2 i odwołania do dokumentacji |
+| Materiały wejściowe | prototyp, transkrypcje demonstracyjne i wnioski z testów | teraz | przykłady fikcyjne, obserwacje oddzielone od wniosków |
 | Plan techniczny | `docs/plan.md` | Faza A | statusy, kroki, ryzyka, „Później” i „Następny krok” |
 | Raporty weryfikacji | `docs/weryfikacja/` | Faza C | dowody kryteriów każdej karty |
 | Kod i testy | zgodnie z planem | Faza B | testy uruchamiane jednym poleceniem |
-| Konfiguracja | `.env.example`, `.gitignore` | F00 | brak sekretów i danych prawdziwych |
+| Konfiguracja | `.gitignore`, `.env.example` | reguły ignorowania teraz, szablon w F00 | brak sekretów i prawdziwych danych |
 
 W repozytorium ani historii Git nie wolno umieszczać `.env`, kluczy, haseł, prawdziwych nagrań, transkrypcji, eksportów ani danych osób.

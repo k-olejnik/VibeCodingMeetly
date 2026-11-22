@@ -35,4 +35,4 @@ Meetly ma nowoczesny, spokojny wygląd dla pracy zespołowej. Jasne tło z delik
 - Karty mają białe tło, cienką chłodną ramkę i miękki cień.
 - Główna nawigacja pokazuje Przegląd, Spotkania, Zadania, Raport tygodniowy zgodnie z rolą oraz Import z Element.
 - Komunikaty są krótkie, konkretne i neutralne.
-- Położenie kart i głównych akcji określają sekcja 4 [SPEC.md](SPEC.md) oraz [aktualny prototyp](meetly-prototyp.html).
+- Położenie kart i głównych akcji określają [sekcja 5 specyfikacji](docs/specyfikacja.md#5-ekrany-i-ścieżki) oraz [aktualny prototyp](meetly-prototyp.html).

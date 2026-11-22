@@ -17,7 +17,7 @@
 
 ## Obserwacje z pierwszej symulacji i stan po poprawkach
 
-Symulacja odbyła się przed zmianami T2. Aktualne zasady opisują [SPEC.md](SPEC.md) i [karta F04](docs/funkcje/F04-widoki-wedlug-roli.md).
+Symulacja odbyła się przed zmianami T2. Aktualne zasady opisują [specyfikacja](docs/specyfikacja.md) i [karta F04](docs/funkcje/F04-widoki-wedlug-roli.md).
 
 | ID | Obserwacja w testowanej wersji | Stan aktualnego prototypu |
 | --- | --- | --- |

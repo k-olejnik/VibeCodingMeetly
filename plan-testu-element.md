@@ -27,7 +27,7 @@ Próba sprawdza zrozumiałość interfejsu na danych demonstracyjnych. Integracj
 | Tester 1 |  |  |  |  |
 | Tester 2 |  |  |  |  |
 
-Wzorzec zapisujemy, gdy co najmniej dwie niezależnie testujące osoby napotkają tę samą trudność. W decyzji wskazujemy zmianę zakresu, zmianę wyglądu albo odrzucenie i podajemy powód. Zmianę w [SPEC.md](SPEC.md) oznaczamy identyfikatorem osoby testującej.
+Wzorzec zapisujemy, gdy co najmniej dwie niezależnie testujące osoby napotkają tę samą trudność. W decyzji wskazujemy zmianę zakresu, zmianę wyglądu albo odrzucenie i podajemy powód. Zmianę w [specyfikacji MVP](docs/specyfikacja.md) oznaczamy identyfikatorem osoby testującej.
 
 ## Weryfikacja techniczna prototypu
 
