@@ -16,11 +16,11 @@ PM ma historię zadań oraz czytelny raport tygodniowy: co zostało zamknięte, 
 1. PM otwiera E7, który domyślnie pokazuje bieżący tydzień kalendarzowy od poniedziałku do niedzieli; może wybrać wcześniejszy tydzień.
 2. Sekcja „Zamknięte w tym tygodniu” pokazuje zadania, dla których w wybranym tygodniu powstała Zmiana zadania na „zamknięte”.
 3. Sekcja „Otwarte zadania” grupuje aktualnie otwarte Zadania według osób odpowiedzialnych.
-4. PM może zamknąć albo ponownie otworzyć zadanie. Każda taka czynność zmienia jego aktualny stan i tworzy Zmianę zadania z czasem oraz kontem PM.
+4. PM może zamknąć albo ponownie otworzyć widoczne zadanie. Każda taka czynność zmienia jego aktualny stan i tworzy Zmianę zadania z czasem oraz kontem PM.
 5. PM może dodać ręcznie wykonane zadanie: wpisuje treść, wybiera osobę odpowiedzialną i zapisuje je jako zamknięte. Zdarzenie zamknięcia trafia do raportu tygodniowego.
-6. Dyrektor może czytać E7, ale nie może dodawać ani zmieniać zadań. Pozostałe role nie mają dostępu do E7.
+6. Dyrektor może czytać E7. Jako wykonawca może usunąć własne zadanie po potwierdzeniu zgodnie z punktem 7. Pozostałe role nie mają dostępu do E7.
 
-7. PM może usunąć pojedyncze zatwierdzone zadanie po potwierdzeniu. Przypisana osoba może je usunąć, jeśli nadal ma dostęp do spotkania źródłowego. Akcja jest dostępna w „Zadaniach” i w szczegółach spotkania. Jeżeli późniejsze spotkanie zmieniło ustalenia, może jawnie usunąć wcześniejsze zadanie. Nowe zadanie pozostaje niezależnym rekordem.
+7. PM i wykonawca mogą usunąć widoczne zadanie po potwierdzeniu. Przy zadaniu ze spotkania osoba usuwająca musi mieć do niego aktualny dostęp. Przy zadaniu ręcznym uprawnienie wynika z roli PM albo przypisania. Jeżeli późniejsze spotkanie zmieniło ustalenia, uprawniona osoba może jawnie usunąć wcześniejsze zadanie. Nowe zadanie pozostaje niezależnym rekordem.
 
 ## Dane
 
@@ -37,7 +37,8 @@ Czyta Zadanie i Zmianę zadania. Tworzy ręczne Zadanie ze źródłem „dodane 
 
 - [test]: Po usunięciu spotkania raport i historia pomijają jego zadania oraz zdarzenia zmiany stanu. Ręcznie dodane zadanie PM jest nadal widoczne.
 
-- F05-KA7 [test, ręcznie]: Gdy istnieją wcześniejsze i nowsze zadanie, PM usuwa wcześniejsze i potwierdza. Wcześniejsza pozycja znika z list wszystkich osób, szczegółów spotkania i raportów, a nowsza pozostaje. W osobnej próbie wcześniejsze zadanie może usunąć też jego wykonawca z aktywnym dostępem. Inne osoby i wykonawca po utracie dostępu do spotkania nie mogą go usunąć.
+- F05-KA7 [test, ręcznie]: PM usuwa widoczne wcześniejsze zadanie po potwierdzeniu. Zadanie znika z list, szczegółów i raportów, a nowsze pozostaje. Wykonawca może usunąć własne zadanie ręczne albo własne zadanie ze spotkania, do którego ma dostęp. Po utracie dostępu serwer odrzuca odczyt i operacje na zadaniach z tego spotkania.
+- F05-KA8 [test]: Dla PM i dyrektora raport uwzględnia zadania ręczne oraz tylko zadania z aktualnie dostępnych spotkań, także za minione tygodnie. Po utracie dostępu do spotkania znikają również jego zdarzenia i zadania w raporcie tej osoby, a pozostali uprawnieni nadal je widzą.
 
 ## Przypadki brzegowe i błędy
 
@@ -49,7 +50,7 @@ Czyta Zadanie i Zmianę zadania. Tworzy ręczne Zadanie ze źródłem „dodane 
 
 ## Ochrona danych
 
-PM i dyrektor zachowują dostęp do zadań i raportów całego zespołu niezależnie od udziału w spotkaniu. Odnośniki do spotkań podlegają regułom F04. Filtry historii spotkań należą do F04. Usunięcie spotkania usuwa zadania pochodzące z tego spotkania i historię ich zmian. Znikają z list zadań oraz raportów tygodniowych, także za minione tygodnie.
+PM i dyrektor mają dostęp do ręcznych zadań zespołu. Zadania, zdarzenia i odnośniki związane ze spotkaniem są widoczne tylko przy aktualnym dostępie do tego spotkania. Reguła obejmuje również raporty z wcześniejszych tygodni. Usunięcie spotkania usuwa powiązane zadania i historię ich zmian dla wszystkich uprawnionych.
 
 Poziom P2. Zdarzenie zmiany zawiera konto PM i pośrednio informacje o pracy członka zespołu, więc nie trafia do logów. Testy korzystają wyłącznie z fikcyjnych kont. N7 musi być sprawdzony przez próbę zmiany z każdej roli.
 

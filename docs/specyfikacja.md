@@ -4,7 +4,7 @@ Wersja 6 · 22 listopada 2026 r. · ujednolicenie dokumentacji
 
 ## 1. Cel i użytkownicy
 
-Meetly pomaga małemu zespołowi zamknąć spotkanie jasnym zestawem ustaleń. Bot w Element nagrywa spotkanie i dostarcza transkrypcję oraz listę uczestników. Meetly proponuje skrót, decyzje, zadania i tematy do wyjaśnienia. Inicjator zatwierdza wynik. Historia i raport tygodniowy pomagają PM śledzić zadania. MVP obejmuje jeden mały zespół.
+Meetly pomaga małemu zespołowi zamknąć spotkanie jasnym zestawem ustaleń. Bot w Element nagrywa spotkanie i dostarcza transkrypcję oraz listę uczestników. Meetly proponuje skrót, decyzje, zadania i tematy do wyjaśnienia. Uprawniony uczestnik zatwierdza wynik. Historia i raport tygodniowy pomagają PM śledzić zadania. MVP obejmuje jeden mały zespół.
 
 ## 2. Co pokazały testy
 
@@ -12,7 +12,7 @@ Wcześniejszy prototyp z transkrypcją w Meetly ma notatki autorki, test jednego
 
 ## 3. Zakres MVP
 
-**Główna ścieżka MVP:** inicjator sprawdza obecność i informuje o nagrywaniu, transkrypcji i AI → „bot start” → bot zapisuje listę połączonych kont i nagrywa → „bot stop” lub koniec rozmowy → bot dostarcza transkrypcję i listę → Meetly proponuje wynik → inicjator zatwierdza → uczestnicy, PM i dyrektor mają dostęp zgodnie z sekcją 4.
+**Główna ścieżka MVP:** inicjator sprawdza obecność w Element i informuje o nagrywaniu, transkrypcji i AI → „bot start” → bot zapisuje listę połączonych kont i nagrywa → „bot stop” lub koniec rozmowy → bot dostarcza transkrypcję i listę → Meetly proponuje wynik → uprawniony uczestnik zatwierdza → wynik jest dostępny zgodnie z sekcją 4.
 
 **Czas na pierwszą wersję:** tydzień pracy.
 
@@ -47,14 +47,14 @@ Wcześniejszy prototyp z transkrypcją w Meetly ma notatki autorki, test jednego
 
 | Rola | Co widzi | Co tworzy | Co zmienia | Co usuwa |
 |---|---|---|---|---|
-| PM | Wszystkie zatwierdzone spotkania i wyniki, wszystkie zadania i raporty tygodniowe | Ręczne zadanie, wynik zainicjowanego spotkania | Własny szkic wyniku i stan każdego zadania | Pojedyncze zadanie oraz spotkania, w których uczestniczył i do których ma dostęp |
-| Dyrektor | Wszystkie zatwierdzone spotkania i wyniki, wszystkie zadania i raporty w trybie odczytu | Wynik zainicjowanego spotkania | Własny szkic wyniku | Spotkania, w których uczestniczył i do których ma dostęp |
-| Programista | Zatwierdzone spotkania, do których ma dostęp, oraz własne zadania | Wynik zainicjowanego spotkania | Własny szkic wyniku | Spotkania, w których uczestniczył i do których ma dostęp |
-| Analityk | Zatwierdzone spotkania, do których ma dostęp, oraz własne zadania | Wynik zainicjowanego spotkania | Własny szkic wyniku | Spotkania, w których uczestniczył i do których ma dostęp |
+| PM | Dostępne zatwierdzone spotkania i ich zadania, ręczne zadania zespołu oraz raport tygodniowy zgodny z dostępem | Ręczne zadanie i wynik w dostępnej kolejce szkiców | Dostępny szkic i stan widocznego zadania | Widoczne zadanie po potwierdzeniu. Spotkanie po potwierdzeniu, jeśli był obecny przy starcie i ma dostęp |
+| Dyrektor | Dostępne zatwierdzone spotkania i ich zadania, ręczne zadania zespołu oraz raport tygodniowy zgodny z dostępem | Wynik w dostępnej kolejce szkiców | Dostępny szkic | Własne zadanie po potwierdzeniu. Spotkanie po potwierdzeniu, jeśli był obecny przy starcie i ma dostęp |
+| Programista | Dostępne zatwierdzone spotkania oraz własne zadania | Wynik w dostępnej kolejce szkiców | Dostępny szkic | Własne zadanie po potwierdzeniu. Spotkanie po potwierdzeniu, jeśli był obecny przy starcie i ma dostęp |
+| Analityk | Dostępne zatwierdzone spotkania oraz własne zadania | Wynik w dostępnej kolejce szkiców | Dostępny szkic | Własne zadanie po potwierdzeniu. Spotkanie po potwierdzeniu, jeśli był obecny przy starcie i ma dostęp |
 
-Dostęp dla uczestników ustala zapis kont połączonych w chwili „bot start”. Rozłączenie po starcie nie odbiera dostępu. Dostęp do spotkania mogą zmieniać uczestnicy z listy startowej, którzy mają do niego dostęp, oraz PM i dyrektor. Użytkownik spoza listy startowej, któremu przyznano dostęp, uzyskuje prawo odczytu. PM i dyrektor mają dostęp wynikający z roli. Odebranie skutecznego dostępu do spotkania odbiera również dostęp do jego zadań. Wykonawca z aktualnym dostępem może usunąć własne zadanie, a PM może usunąć dowolne. Serwer egzekwuje te reguły także przy odczycie bezpośrednim.
+Aktualny dostęp do zatwierdzonego spotkania wynika z zachowanego dostępu uczestnika z listy „bot start”, jawnego nadania lub przypisania co najmniej jednego zadania z tego spotkania. Przypisanie nadaje dostęp przy zatwierdzeniu, niezależnie od roli. Po usunięciu ostatniego przypisanego zadania wygasa dostęp wynikający z przypisania. Pozostałe podstawy dostępu zachowują ważność. Rozłączenie po starcie nie odbiera dostępu. Zmiana listy i usunięcie zatwierdzonego spotkania wymagają obecności przy starcie oraz aktualnego dostępu, niezależnie od roli. Utrata skutecznego dostępu odbiera odczyt spotkania i jego zadań, także przez API i raporty historyczne.
 
-Każdy członek zespołu może zainicjować spotkanie. Inicjator to uczestnik, który rozpoczął spotkanie, i może zatwierdzić szkic tego spotkania. W szczegółach zainicjowanego spotkania widzi wszystkie zadania, jeśli nadal ma dostęp do wyniku.
+Każdy członek zespołu może zainicjować spotkanie. Inicjator to uczestnik, który je rozpoczął. W szczegółach zainicjowanego spotkania widzi wszystkie zadania, jeśli nadal ma dostęp do wyniku. Każdy zweryfikowany uczestnik z listy „bot start” może otworzyć szkic, poprawić podsumowanie, zadania, przypisania i listę dostępu oraz zatwierdzić wynik. Pierwsze skuteczne zatwierdzenie zapisuje wynik i zadania raz oraz zamyka szkic we wszystkich kolejkach. Przy ponownym imporcie obowiązuje zakres uprawnień z DEC-12.
 
 Rola jest przypisana do konta przez właściciela projektu poza interfejsem MVP. Aplikacja nie ma w pierwszej wersji ekranu zarządzania rolami.
 
@@ -64,18 +64,18 @@ Rola jest przypisana do konta przez właściciela projektu poza interfejsem MVP.
 |---|---|---|---|---|
 | E1 | Logowanie | wszyscy | nowy | F01 |
 | E2 | Przegląd / Mój widok | wszyscy, zawartość zależna od roli | tak | F04 |
-| — | Import z Element | inicjator, kolejka własnych szkiców | symulacja | F02, F03 |
+| — | Import z Element | uprawniony uczestnik, kolejka dostępnych szkiców | symulacja | F02, F03 |
 | E5 | Wynik spotkania do zatwierdzenia | osoba inicjująca spotkanie | tak | F03 |
-| E6 | Zatwierdzony wynik spotkania | uczestnicy i inne osoby uprawnione, PM, dyrektor | tak | F04 |
-| E7 | Historia zadań i raport tygodniowy | PM; dyrektor tylko do odczytu | demonstracyjny raport | F05 |
+| E6 | Zatwierdzony wynik spotkania | osoby z aktualnym dostępem | tak | F04 |
+| E7 | Historia zadań i raport tygodniowy | PM i dyrektor, zgodnie z uprawnieniami z sekcji 4 | demonstracyjny raport | F05 |
 
 ### Główna ścieżka w aplikacji
 
 1. **Logowanie (E1)** — użytkownik uwierzytelnia się i przechodzi do Przeglądu. W prototypie ten krok reprezentuje wybór konta demonstracyjnego.
-2. **Przegląd / Mój widok (E2)** — użytkownik widzi podsumowanie tygodnia, ostatnie spotkania i zadania zgodne z dostępem. Inicjator wybiera „Import z Element” z głównej nawigacji lub akcji w Przeglądzie.
-3. **Import z Element** — inicjator widzi kolejkę swoich spotkań do zatwierdzenia i wybiera „Sprawdź szkic”.
-4. **Wynik spotkania do zatwierdzenia (E5)** — inicjator poprawia treść, przypisania i listę dostępu. Podsumowanie jest po lewej, zadania po prawej. Na wąskim ekranie zadania są pod podsumowaniem. Puste decyzje i tematy do wyjaśnienia mają akcję dodania sekcji. Pola rosną z treścią. Pod listą dostępu pozostają „Zatwierdź wynik”, „Wróć do kolejki” i „Porzuć szkic”.
-5. **Zatwierdzony wynik spotkania (E6)** — po akcji „Zatwierdź wynik” prototyp pokazuje komunikat „Zatwierdzono wynik spotkania.” i szczegóły, jeśli inicjator ma do nich dostęp. Przy braku dostępu wraca do historii. Osoba uprawniona wraca do wyniku przez zakładkę „Spotkania”. Osoba odpowiedzialna widzi przypisane zadania w zakładce „Zadania”.
+2. **Przegląd / Mój widok (E2)** — użytkownik widzi podsumowanie tygodnia, ostatnie spotkania i zadania zgodne z dostępem. Uprawniony uczestnik wybiera „Import z Element” z głównej nawigacji lub akcji w Przeglądzie.
+3. **Import z Element** — uprawniony uczestnik widzi kolejkę dostępnych spotkań do zatwierdzenia i wybiera „Sprawdź szkic”.
+4. **Wynik spotkania do zatwierdzenia (E5)** — uprawniony uczestnik poprawia treść, przypisania i listę dostępu. Podsumowanie jest po lewej, zadania po prawej. Na wąskim ekranie zadania są pod podsumowaniem. Puste decyzje i tematy do wyjaśnienia mają akcję dodania sekcji. Pola rosną z treścią. Pod listą dostępu pozostają „Zatwierdź wynik”, „Wróć do kolejki” i „Porzuć szkic”.
+5. **Zatwierdzony wynik spotkania (E6)** — po akcji „Zatwierdź wynik” Meetly pokazuje komunikat „Zatwierdzono wynik spotkania.” i szczegóły, jeśli zatwierdzająca osoba ma do nich dostęp. Przy braku dostępu wraca do historii. Osoba uprawniona wraca do wyniku przez zakładkę „Spotkania”. Osoba odpowiedzialna widzi przypisane zadania w zakładce „Zadania”.
 
 ### Historie użytkowników i kryteria akceptacji
 
@@ -95,21 +95,21 @@ Jako członek zespołu chcę zalogować się na swoje konto, żeby zobaczyć wyn
 
 #### US2 · Import z Element
 
-Jako inicjator chcę uzyskać szkic po zakończeniu nagrania w Element, żeby móc sprawdzić ustalenia w Meetly.
+Jako uprawniony uczestnik chcę uzyskać szkic po zakończeniu nagrania w Element, żeby móc sprawdzić ustalenia w Meetly.
 
 - **K1.** Nagranie rozpoczyna się dopiero po „bot start”. Lista wejściowa zawiera konta połączone w chwili komendy, z pominięciem bota.
 
   **Sprawdzam:** w fikcyjnym spotkaniu dołączam dwoma kontami i wysyłam „bot start”. Zaliczone, gdy nagranie zaczyna się po komendzie, a w szkicu widać obydwa konta i brak konta bota.
-- **K2.** „Bot stop” i koniec połączenia kończą nagranie, a przyjęty import pojawia się raz w kolejce inicjatora.
+- **K2.** „Bot stop” i koniec połączenia kończą nagranie. Ten sam import występuje raz w kolejce każdego uprawnionego uczestnika.
 
   **Sprawdzam:** wykonuję po jednym fikcyjnym spotkaniu dla obu sposobów zakończenia i ponawiam dostarczenie jednego importu. Zaliczone, gdy oba spotkania mają własne pozycje i powtórzony import nie dubluje pozycji.
-- **K3.** Niekompletny import ani import bez zweryfikowanego inicjatora nie wystawia szkicu do zatwierdzenia.
+- **K3.** Niekompletny lub nieuwierzytelniony import nie wystawia szkicu. Kolejka i odczyt bezpośredni wymagają zweryfikowanego uprawnienia uczestnika.
 
-  **Sprawdzam:** wysyłam fikcyjne importy z brakującą transkrypcją i bez powiązania inicjatora. Zaliczone, gdy kolejki testowych kont nie pokazują tych szkiców.
+  **Sprawdzam:** wysyłam niekompletny import, a następnie poprawny import i otwieram kolejki na dwóch kontach uczestników oraz koncie osoby spoza listy startowej. Zaliczone, gdy szkic pojawia się wyłącznie na dwóch uprawnionych kontach.
 
 #### US3 · Szkic proponowany przez AI
 
-Jako inicjator chcę zobaczyć propozycję wyniku, żeby zweryfikować decyzje i odpowiedzialność przed jej udostępnieniem.
+Jako uprawniony uczestnik chcę zobaczyć propozycję wyniku, żeby zweryfikować decyzje i odpowiedzialność przed jej udostępnieniem.
 
 - **K1.** Po przetworzeniu importu szkic pokazuje skrót i zadania, a decyzje i tematy do wyjaśnienia pokazuje, kiedy są wypełnione.
 
@@ -119,18 +119,18 @@ Jako inicjator chcę zobaczyć propozycję wyniku, żeby zweryfikować decyzje i
   **Sprawdzam:** używam przykładu, w którym podano działanie bez osoby odpowiedzialnej. Zaliczone, gdy działanie można znaleźć w tematach do wyjaśnienia i brak zapisanego zadania bez właściciela.
 - **K3.** Błąd generowania daje komunikat i możliwość ponowienia, a wynik pozostaje niezatwierdzony.
 
-  **Sprawdzam:** wywołuję błąd przez atrapę usługi AI. Zaliczone, gdy inicjator widzi akcję ponowienia i spotkania nie ma w historii zatwierdzonych wyników.
+  **Sprawdzam:** wywołuję błąd przez atrapę usługi AI. Zaliczone, gdy uprawniony uczestnik widzi akcję ponowienia i spotkania nie ma w historii zatwierdzonych wyników.
 
 #### US4 · Edycja i zatwierdzenie
 
-Jako inicjator chcę poprawić szkic i go zatwierdzić, żeby zespół otrzymał zweryfikowany wynik.
+Jako uprawniony uczestnik chcę poprawić szkic i go zatwierdzić, żeby zespół otrzymał zweryfikowany wynik.
 
 - **K1.** Po zatwierdzeniu zachowują się edytowany skrót, treść zadania i wybrana osoba odpowiedzialna.
 
   **Sprawdzam:** zmieniam skrót i zadanie, przypisuję je Analitykowi A i zatwierdzam. Zaliczone, gdy szczegóły pokazują poprawiony skrót, a zadanie widnieje na liście Analityka A.
-- **K2.** Zatwierdzenie usuwa szkic z kolejki i pokazuje potwierdzenie. Wynik staje się dostępny zgodnie z listą dostępu i rolami.
+- **K2.** Pierwsze skuteczne zatwierdzenie zapisuje wynik i zadania raz, usuwa szkic ze wszystkich kolejek i nadaje wykonawcom wgląd do spotkania.
 
-  **Sprawdzam:** zmieniam listę dostępu, zatwierdzam, wracam do kolejki i sprawdzam historię na wybranych kontach. Zaliczone, gdy widzę potwierdzenie, kolejka nie zawiera szkicu, a historia pokazuje wynik wyłącznie na uprawnionych kontach.
+  **Sprawdzam:** na dwóch kontach uczestników prawie równocześnie zatwierdzam ten sam szkic z zadaniem dla osoby spoza listy. Zaliczone, gdy powstaje jeden wynik, zadanie zapisuje się raz, szkic znika z obu kolejek, a wykonawca widzi wynik.
 - **K3.** Porzucenie szkicu usuwa go z kolejki i nie tworzy wyniku ani zadań.
 
   **Sprawdzam:** wybieram „Porzuć szkic” na drugim fikcyjnym spotkaniu. Zaliczone, gdy szkic znika z kolejki, a wynik i zadania nie pojawiają się w pozostałych widokach.
@@ -145,16 +145,16 @@ Jako członek zespołu chcę wrócić do zatwierdzonych ustaleń i przypisanych 
 - **K1.** Zakładka „Spotkania” pokazuje tytuł i datę dostępnego spotkania i pozwala otworzyć jego zatwierdzone podsumowanie.
 
   **Sprawdzam:** loguję się jako uczestnik, otwieram „Spotkania” i wybieram wynik. Zaliczone, gdy data i tytuł zgadzają się z wynikiem, a widoczny skrót odpowiada zatwierdzonej treści.
-- **K2.** Analityk i programista widzą własne zadania w zakładce „Zadania”. Inicjator może zobaczyć zadania innych osób w szczegółach spotkania, które zainicjował, gdy nadal ma dostęp. PM i dyrektor widzą zadania całego zespołu.
+- **K2.** Analityk i programista widzą własne zadania na liście. Inicjator z dostępem widzi także cudze zadania w szczegółach zainicjowanego spotkania. PM i dyrektor widzą zadania z dostępnych im spotkań oraz ręczne zadania zespołu.
 
-  **Sprawdzam:** po zatwierdzeniu po jednym zadaniu dla dwóch osób przełączam cztery fikcyjne konta. Zaliczone, gdy każda przypisana osoba widzi swoje zadanie, inicjator widzi oba w szczegółach spotkania, a PM i dyrektor widzą oba na liście zadań.
-- **K3.** W historii osób uprawnionych pojawiają się tylko wyniki zatwierdzone przez inicjatora.
+  **Sprawdzam:** przypisuję po jednym zadaniu dwóm osobom. Zaliczone, gdy obie widzą własne zadania, inicjator widzi oba w szczegółach, PM z dostępem widzi oba, a dyrektor bez dostępu nie widzi żadnego.
+- **K3.** Historia pokazuje wyłącznie zatwierdzone wyniki z dostępnych spotkań.
 
-  **Sprawdzam:** porównuję historię, gdy jeden wynik jest szkicem, a drugi został zatwierdzony. Zaliczone, gdy drugi jest widoczny, a pierwszy znajduje się wyłącznie w kolejce inicjatora.
+  **Sprawdzam:** porównuję historię i kolejkę na fikcyjnych kontach uczestnika oraz osoby spoza spotkania. Szkic widzi w kolejce tylko uprawniony uczestnik.
 
 - **K4.** Gdy osoba traci dostęp do spotkania, znika ono z jej historii, a przypisane jej zadania z tego spotkania znikają z jej listy.
 
-  **Sprawdzam:** odbieram Analitykowi A dostęp i ponownie otwieram jego historię oraz listę zadań. Zaliczone, gdy nie widzi ani spotkania, ani jego zadań, a PM nadal je widzi.
+  **Sprawdzam:** usuwam ostatnie zadanie Analityka A ze spotkania, do którego miał dostęp wyłącznie przez przypisanie. Zaliczone, gdy znika także spotkanie z jego historii. W osobnej próbie jawnie nadany dostęp pozostaje aktywny.
 
 ## 6. Model danych
 
@@ -176,13 +176,13 @@ Spotkanie zaimportowane z Element. Nagranie pozostaje na chronionym dysku po str
 
 | Pole | Znaczenie | Typ | Wymagane | Przykład fikcyjny | Kategoria danych | Kto ustawia | Kto widzi |
 |---|---|---|---|---|---|---|---|
-| tytuł | opis spotkania | tekst, do 120 znaków | tak | „Planowanie wydania” | może zawierać dane osobowe lub poufne | inicjator | inicjator; po zatwierdzeniu osoby z dostępem, PM i dyrektor |
-| inicjator | osoba uprawniona do zatwierdzenia szkicu | odwołanie do Konta | tak przed zatwierdzeniem | „Programista A” | osobowe | mechanizm ustalany w Fazie A | zgodnie z dostępem do spotkania |
-| rozpoczęto | czas uruchomienia | data i godzina | tak | 05.11.2026, 10:00 | zwykłe | aplikacja | inicjator, PM, dyrektor |
-| zakończono | czas zamknięcia | data i godzina | nie, do końca sesji | 05.11.2026, 10:35 | zwykłe | aplikacja | inicjator, PM, dyrektor |
-| status | etap importu i wyniku | wybór: przetwarzanie, do zatwierdzenia, zatwierdzone, odrzucone | tak | zatwierdzone | zwykłe | aplikacja i inicjator | według uprawnień |
+| tytuł | opis spotkania | tekst, do 120 znaków | tak | „Planowanie wydania” | może zawierać dane osobowe lub poufne | inicjator | uprawnieni do szkicu albo zatwierdzonego wyniku |
+| inicjator | konto osoby, która rozpoczęła spotkanie | odwołanie do Konta | według kontraktu importu | „Programista A” | osobowe | mechanizm ustalany w Fazie A | zgodnie z dostępem do spotkania |
+| rozpoczęto | czas uruchomienia | data i godzina | tak | 05.11.2026, 10:00 | zwykłe | aplikacja | zgodnie z dostępem do spotkania |
+| zakończono | czas zamknięcia | data i godzina | nie, do końca sesji | 05.11.2026, 10:35 | zwykłe | aplikacja | zgodnie z dostępem do spotkania |
+| status | etap importu i wyniku | wybór: przetwarzanie, do zatwierdzenia, zatwierdzone, odrzucone | tak | zatwierdzone | zwykłe | aplikacja na podstawie operacji uprawnionych kont | według uprawnień |
 
-Spotkanie przechowuje identyfikator importu, listę kont obecnych w chwili startu oraz aktualną listę dostępu inicjalizowaną z tej listy. Mapowanie identyfikatora Matrix na konto Meetly jest jednoznaczne i sprawdzane po stronie serwera. Brak mapowania nie nadaje dostępu.
+Spotkanie przechowuje identyfikator importu, listę kont obecnych w chwili startu oraz podstawy aktualnego dostępu opisane w sekcji 4. Mapowanie identyfikatora Matrix na konto Meetly jest jednoznaczne i sprawdzane po stronie serwera. Brak mapowania nie nadaje dostępu na podstawie obecności. Do obsługi ponownego importu potrzebna jest informacja o uprawnionych uczestnikach w chwili usunięcia. Zakres i czas przechowywania niezbędnych metadanych integracji ustala Faza A.
 
 ### Przejściowa transkrypcja
 
@@ -199,13 +199,13 @@ Historia wyszukuje słowa w tytułach i zatwierdzonych podsumowaniach dostępnyc
 
 ### Wynik spotkania
 
-Zatwierdzony rezultat, który zastępuje transkrypcję w historii aplikacji. Meetly automatycznie usuwa spotkanie i jego wynik po 6 miesiącach kalendarzowych od zakończenia spotkania. Uczestnik z listy obecności przy „bot start” i z aktualnym dostępem może usunąć je wcześniej. Potwierdzenie ma treść „Czy na pewno chcesz usunąć spotkanie?”. Serwer sprawdza uczestnictwo i dostęp przed wykonaniem operacji. Usunięcie dotyczy wszystkich użytkowników i obejmuje wynik, zadania pochodzące ze spotkania oraz historię ich zmian. Źródłowe nagranie pozostaje na chronionym dysku zgodnie z retencją 30 dni. Jeśli nadal istnieje, można jawnie zlecić ponowny import jako nowy szkic do zatwierdzenia. Pierwotne edycje i przypisania trzeba w takim szkicu sprawdzić ponownie. Mechanizm ponownego importu jest do ustalenia w Fazie A.
+Zatwierdzony rezultat, który zastępuje transkrypcję w historii aplikacji. Meetly automatycznie usuwa spotkanie i jego wynik po 6 miesiącach kalendarzowych od zakończenia spotkania. Uczestnik z listy obecności przy „bot start” i z aktualnym dostępem może usunąć je wcześniej. Potwierdzenie ma treść „Czy na pewno chcesz usunąć spotkanie?”. Serwer sprawdza uczestnictwo i dostęp przed wykonaniem operacji. Usunięcie dotyczy wszystkich użytkowników i obejmuje wynik, zadania pochodzące ze spotkania oraz historię ich zmian. Źródłowe nagranie pozostaje na chronionym dysku zgodnie z retencją 30 dni. Dopóki nagranie jest dostępne, jawny ponowny import może zlecić zweryfikowany uczestnik z listy „bot start”, który miał dostęp w chwili usunięcia spotkania. Nowy szkic trafia tylko do takich uczestników. Każdy z nich może go edytować i zatwierdzić. Ponowienie tego samego dostarczenia nie odtwarza usuniętego spotkania. Pierwotne edycje i przypisania trzeba w takim szkicu sprawdzić ponownie. Mechanizm ponownego importu jest do ustalenia w Fazie A.
 
 | Pole | Znaczenie | Typ | Wymagane | Przykład fikcyjny | Kategoria danych | Kto ustawia | Kto widzi |
 |---|---|---|---|---|---|---|---|
-| skrót | zwięzły opis ustaleń | tekst | tak po zatwierdzeniu | „Zespół ustalił zakres wydania.” | P2: może zawierać treści służbowe | AI proponuje, inicjator zatwierdza | osoby z dostępem do spotkania, PM i dyrektor |
-| decyzje | lista podjętych decyzji | lista tekstów | tak, może być pusta | „Wydanie w piątek.” | P2 | AI proponuje, inicjator zatwierdza | osoby z dostępem do spotkania, PM i dyrektor |
-| tematy do wyjaśnienia | nierozstrzygnięte pytania | lista tekstów | tak, może być pusta | „Kto zatwierdza komunikację?” | P2 | AI proponuje, inicjator zatwierdza | osoby z dostępem do spotkania, PM i dyrektor |
+| skrót | zwięzły opis ustaleń | tekst | tak po zatwierdzeniu | „Zespół ustalił zakres wydania.” | P2: może zawierać treści służbowe | AI proponuje, uprawniony uczestnik zatwierdza | osoby z aktualnym dostępem do spotkania |
+| decyzje | lista podjętych decyzji | lista tekstów | tak, może być pusta | „Wydanie w piątek.” | P2 | AI proponuje, uprawniony uczestnik zatwierdza | osoby z aktualnym dostępem do spotkania |
+| tematy do wyjaśnienia | nierozstrzygnięte pytania | lista tekstów | tak, może być pusta | „Kto zatwierdza komunikację?” | P2 | AI proponuje, uprawniony uczestnik zatwierdza | osoby z aktualnym dostępem do spotkania |
 
 ### Zadanie
 
@@ -213,14 +213,14 @@ Pozycja wynikająca ze spotkania. Opis może oznaczać nowe działanie albo zmia
 
 | Pole | Znaczenie | Typ | Wymagane | Przykład fikcyjny | Kategoria danych | Kto ustawia | Kto widzi |
 |---|---|---|---|---|---|---|---|
-| treść | co ma zrobić lub zmienić osoba | tekst, do 500 znaków | tak | „Uzupełnij opis scenariusza logowania.” | P2: może zawierać dane służbowe | AI proponuje, inicjator zatwierdza | przypisana osoba, PM, dyrektor |
-| osoba odpowiedzialna | konto wykonujące zadanie | odwołanie do Konta | tak | „Analityk A” | osobowe | AI proponuje, inicjator zatwierdza | przypisana osoba, PM, dyrektor |
-| termin | data wykonania, jeśli padła na spotkaniu | data | nie | 07.11.2026 | zwykłe | AI proponuje, inicjator zatwierdza | przypisana osoba, PM, dyrektor |
-| źródło | skąd pochodzi zadanie | wybór: spotkanie, dodane ręcznie przez PM | tak | spotkanie | pośrednio P2 | aplikacja albo PM | przypisana osoba, PM, dyrektor |
-| spotkanie | źródłowa sesja, jeśli zadanie powstało ze spotkania | odwołanie do Spotkania | nie | „Planowanie wydania” | pośrednio P2 | aplikacja | przypisana osoba z dostępem do spotkania, PM, dyrektor |
-| stan | aktualny etap zadania | wybór: otwarte, zamknięte | tak | otwarte | zwykłe | aplikacja przy utworzeniu; PM później | przypisana osoba, PM, dyrektor |
+| treść | co ma zrobić lub zmienić osoba | tekst, do 500 znaków | tak | „Uzupełnij opis scenariusza logowania.” | P2: może zawierać dane służbowe | AI proponuje, uprawniony uczestnik zatwierdza | zgodnie z zasadami odczytu z sekcji 4 |
+| osoba odpowiedzialna | konto wykonujące zadanie | odwołanie do Konta | tak | „Analityk A” | osobowe | AI proponuje, uprawniony uczestnik zatwierdza | zgodnie z zasadami odczytu z sekcji 4 |
+| termin | data wykonania, jeśli padła na spotkaniu | data | nie | 07.11.2026 | zwykłe | AI proponuje, uprawniony uczestnik zatwierdza | zgodnie z zasadami odczytu z sekcji 4 |
+| źródło | skąd pochodzi zadanie | wybór: spotkanie, dodane ręcznie przez PM | tak | spotkanie | pośrednio P2 | aplikacja albo PM | zgodnie z zasadami odczytu z sekcji 4 |
+| spotkanie | źródłowa sesja, jeśli zadanie powstało ze spotkania | odwołanie do Spotkania | nie | „Planowanie wydania” | pośrednio P2 | aplikacja | zgodnie z zasadami odczytu z sekcji 4 |
+| stan | aktualny etap zadania | wybór: otwarte, zamknięte | tak | otwarte | zwykłe | aplikacja przy utworzeniu; PM później | zgodnie z zasadami odczytu z sekcji 4 |
 
-Nie powstaje zadanie bez wskazanej osoby odpowiedzialnej. AI ma wtedy dodać sprawę do „tematów do wyjaśnienia”. PM może dodać ręcznie zadanie już wykonane, wskazując osobę odpowiedzialną; jego źródłem jest wtedy „dodane ręcznie przez PM”. PM lub osoba przypisana do zadania z aktualnym dostępem do spotkania może usunąć je po potwierdzeniu. Usunięcie obejmuje wszystkie profile, szczegóły spotkania i raporty oraz historię zmian tego zadania. Jeśli kolejne spotkanie zmieniło zadanie, człowiek może usunąć poprzednią pozycję i zachować nową. Import i AI nie zastępują zadań automatycznie. Po odebraniu dostępu do spotkania zadanie znika z widoków tej osoby, a serwer odrzuca bezpośredni odczyt i próbę jego usunięcia. Rekord pozostaje dostępny dla pozostałych uprawnionych. Tryb zgłaszania usunięcia danych pozostaje do ustalenia (Q1). Usunięcie spotkania usuwa zadania pochodzące z tego spotkania i historię ich zmian. Ręczne zadania PM mają osobne źródło.
+Nie powstaje zadanie bez wskazanej osoby odpowiedzialnej. AI ma wtedy dodać sprawę do „tematów do wyjaśnienia”. PM może dodać ręcznie zadanie już wykonane, wskazując osobę odpowiedzialną; jego źródłem jest wtedy „dodane ręcznie przez PM”. PM lub wykonawca mogą usunąć zadanie po potwierdzeniu. Dla zadania ze spotkania osoba usuwająca musi mieć aktualny dostęp do spotkania. Usunięcie obejmuje wszystkie profile, szczegóły spotkania i raporty oraz historię zmian tego zadania. Jeśli kolejne spotkanie zmieniło zadanie, człowiek może usunąć poprzednią pozycję i zachować nową. Import i AI nie zastępują zadań automatycznie. Po utracie skutecznego dostępu do spotkania zadanie znika z widoków tej osoby, a serwer odrzuca bezpośredni odczyt i próbę jego usunięcia. Rekord pozostaje dostępny dla pozostałych uprawnionych. Tryb zgłaszania usunięcia danych pozostaje do ustalenia (Q1). Usunięcie spotkania usuwa zadania pochodzące z tego spotkania i historię ich zmian. Ręczne zadania PM mają osobne źródło.
 
 ### Zmiana zadania
 
@@ -245,13 +245,13 @@ Raport tygodniowy nie jest osobną kopią danych. Dla wybranego tygodnia pokazuj
 
 **Niezmienniki:**
 
-- N1: Programista i analityk widzą zatwierdzony wynik wyłącznie przy dostępie do spotkania i widzą na listach wyłącznie własne zadania ze spotkań, do których mają dostęp. W szczegółach zainicjowanego spotkania inicjator z dostępem widzi wszystkie zadania tego spotkania. Test obejmuje listę spotkań i bezpośredni odczyt po stronie serwera.
-- N2: PM i dyrektor widzą wszystkie zatwierdzone wyniki oraz zadania zespołu — test kont roli PM i dyrektora.
+- N1: Zatwierdzony wynik jest dostępny wyłącznie dla osób z aktualnym dostępem do spotkania. Programista i analityk widzą na listach własne zadania z dostępnych spotkań oraz własne zadania ręczne. W szczegółach swojego spotkania inicjator z dostępem widzi wszystkie zadania. Test obejmuje listy oraz odczyt bezpośredni.
+- N2: PM i dyrektor widzą zatwierdzone wyniki i zadania ze spotkań, do których mają aktualny dostęp. Ta sama reguła obowiązuje w raportach, również za minione tygodnie. Ręczne zadania zespołu są dla nich dostępne.
 - N3: Surowa transkrypcja robocza jest dostępna wyłącznie dla inicjatora przed zatwierdzeniem oraz dla procesu generowania szkicu.
-- N4: AI nie publikuje ani nie nadpisuje wyniku; zapis następuje wyłącznie po zatwierdzeniu przez inicjatora — test.
+- N4: Szkic edytują i zatwierdzają uprawnieni zweryfikowani uczestnicy. Tylko pierwsze skuteczne zatwierdzenie publikuje wynik i zadania. AI nie publikuje ani nie nadpisuje wyniku.
 - N5: Meetly usuwa transkrypcję po zatwierdzeniu lub porzuceniu wyniku. Nagranie pozostaje na chronionym dysku integracji i jest automatycznie usuwane po 30 dniach.
 - N6: Treść spotkań, e-maile i dane logowania nie trafiają do logów, komunikatów błędów, adresów URL ani nazw plików — przegląd testów i zmienionych plików.
-- N7: Tylko PM może dodać ręczne zadanie lub zmienić stan zadania. Zatwierdzone zadanie może usunąć PM albo wykonawca mający dostęp do spotkania źródłowego. Każda zmiana stanu tworzy historię. Test obejmuje konto PM i pozostałe role.
+- N7: Tylko PM może dodać ręczne zadanie lub zmienić stan widocznego zadania. Po potwierdzeniu PM lub wykonawca mogą usunąć zadanie ręczne. Zadanie ze spotkania mogą usunąć PM z dostępem do tego spotkania lub jego wykonawca z takim dostępem. Każda zmiana stanu tworzy historię. Test obejmuje wszystkie role.
 
 **Zasady dla agenta programującego:**
 
@@ -266,7 +266,7 @@ Raport tygodniowy nie jest osobną kopią danych. Dla wybranego tygodnia pokazuj
 9. Każde pole osobowe ma cel opisany w sekcji 6.
 10. Błąd lub brak konfiguracji blokuje rozpoczęcie przetwarzania, zamiast wysłać dane do nieznanej usługi.
 
-**Funkcje z modelem AI:** Do AI trafiają tylko: przejściowa transkrypcja nagrania, tytuł spotkania oraz imiona wyświetlane i role uczestników konieczne do przypisania zadania. Nie trafiają: e-maile, identyfikatory Matrix i Meetly, historia innych spotkań ani dane poza aktywną sesją. Test z wartością `ZNACZNIK_EMAIL` w polu e-mail musi potwierdzać, że nie występuje w zapytaniu do AI. Odpowiedź AI ma ustalony format: skrót, decyzje, zadania z przypisaną osobą i opcjonalnym terminem oraz tematy do wyjaśnienia. Aplikacja sprawdza format odpowiedzi przed pokazaniem jej inicjatorowi. AI jedynie proponuje treść; człowiek zatwierdza i może poprawić każdy element. Koszt jednego użycia, limit na użytkownika oraz limit budżetu są do sprawdzenia w Fazie A. Przy błędzie AI aplikacja nie zapisuje wyniku, pokazuje zrozumiały komunikat i pozwala inicjatorowi ręcznie ponowić próbę, dopóki sesja pozostaje otwarta.
+**Funkcje z modelem AI:** Do AI trafiają tylko: przejściowa transkrypcja nagrania, tytuł spotkania oraz imiona wyświetlane i role uczestników konieczne do przypisania zadania. Nie trafiają: e-maile, identyfikatory Matrix i Meetly, historia innych spotkań ani dane poza aktywną sesją. Test z wartością `ZNACZNIK_EMAIL` w polu e-mail musi potwierdzać, że nie występuje w zapytaniu do AI. Odpowiedź AI ma ustalony format: skrót, decyzje, zadania z przypisaną osobą i opcjonalnym terminem oraz tematy do wyjaśnienia. Aplikacja sprawdza format odpowiedzi przed pokazaniem jej uprawnionym uczestnikom. AI jedynie proponuje treść; człowiek zatwierdza i może poprawić każdy element. Koszt jednego użycia, limit na użytkownika oraz limit budżetu są do sprawdzenia w Fazie A. Przy błędzie AI aplikacja nie zapisuje wyniku, pokazuje zrozumiały komunikat i pozwala uprawnionemu uczestnikowi ręcznie ponowić próbę, dopóki sesja pozostaje otwarta.
 
 **Ograniczenia:** Usunięcie surowej transkrypcji po sesji ogranicza ryzyko przechowywania danych, ale nie gwarantuje poprawności propozycji AI. Nie zastępuje też obowiązków zespołu dotyczących poinformowania uczestników spotkania.
 
@@ -301,17 +301,17 @@ Kierunek wyglądu opisuje [DESIGN.md](../DESIGN.md). Układ, nazwy i miejsca gł
 
 - DEC-1 · 05.11.2026: Nazwa aplikacji to Meetly — źródło: właściciel projektu.
 - DEC-2 · 18.11.2026: Spotkania odbywają się w Element. Inicjator sprawdza komplet uczestników i mówi „bot start”. Bot zapisuje listę połączonych kont i zaczyna nagrywanie. „Bot stop” lub koniec rozmowy kończy nagranie. Bot przekazuje Meetly listę i transkrypcję.
-- DEC-3 · 18.11.2026: Domyślnie spotkanie widzą osoby połączone w chwili „bot start”. Dostęp do konkretnego spotkania można zmienić w Meetly. PM i dyrektor widzą wszystkie zatwierdzone spotkania. Programista i analityk widzą własne zadania na liście. Wyjątek w szczegółach opisuje DEC-12.
+- DEC-3 · 24.11.2026: Aktualny dostęp do zatwierdzonego spotkania wynika z zachowanego dostępu uczestnika z listy „bot start”, jawnego nadania lub przypisania co najmniej jednego zadania z tego spotkania. Przypisanie nadaje dostęp przy zatwierdzeniu, niezależnie od roli. Po usunięciu ostatniego przypisanego zadania wygasa dostęp wynikający z przypisania. Pozostałe podstawy dostępu zachowują ważność. Programista i analityk widzą własne zadania na liście. Wyjątek dla inicjatora w szczegółach opisuje DEC-12.
 - DEC-4 · 05.11.2026: Pierwsza wersja służy jednemu małemu zespołowi; wiele zespołów jest później — źródło: właściciel projektu.
-- DEC-5 · 18.11.2026: Inicjator przegląda, poprawia i zatwierdza szkic wyniku w Meetly.
+- DEC-5 · 24.11.2026: Każdy zweryfikowany uczestnik z listy „bot start” może otworzyć szkic, poprawić podsumowanie, zadania, przypisania i listę dostępu oraz zatwierdzić wynik. Pierwsze skuteczne zatwierdzenie zapisuje wynik i zadania raz oraz zamyka szkic we wszystkich kolejkach. Przy ponownym imporcie obowiązuje zakres uprawnień z DEC-12. Robocza transkrypcja podlega N3.
 - DEC-6 · 18.11.2026: Nagranie pozostaje na chronionym dysku i jest automatycznie usuwane po 30 dniach. Meetly usuwa transkrypcję po zatwierdzeniu lub porzuceniu wyniku.
 - DEC-7 · 05.11.2026: Termin zadania jest opcjonalny; zadanie może opisywać zmianę do wykonania w bieżącej pracy osoby — źródło: właściciel projektu.
-- DEC-8 · 05.11.2026: Dyrektor początkowo widzi całość wyników oraz wszystkie zadania; później zdecyduje, które informacje są dla niego istotne — źródło: właściciel projektu.
+- DEC-8 · 24.11.2026: PM i dyrektor widzą wyniki i zadania tylko z dostępnych spotkań. Raporty stosują aktualny dostęp także dla minionych tygodni. Ręczne zadania zespołu pozostają widoczne.
 - DEC-9 · 05.11.2026: Interfejs pierwszej wersji jest po polsku — źródło: język rozmowy z właścicielem projektu.
 - DEC-10 · 05.11.2026: Meetly przechowuje historię zatwierdzonych wyników i zadań; PM może ręcznie dodać wykonane zadanie oraz zamykać lub ponownie otwierać zadania. Raport tygodniowy pokazuje zamknięte i otwarte zadania według osób — źródło: właściciel projektu. Zmienia zakres MVP z wersji 1.
-- DEC-11 · 18.11.2026: Spotkania w Meetly są dostępne przez 6 miesięcy. Uczestnik z listy obecności i z aktualnym dostępem może je usunąć wcześniej po potwierdzeniu. Usunięcie obejmuje wynik, zadania ze spotkania i historię ich zmian. Uczestnik danego spotkania, PM i dyrektor mogą zmieniać jego listę dostępu. Historia spotkań ma filtr słów, dat od i do oraz filtr wieku w dniach, tygodniach lub miesiącach.
-- DEC-12 · 22.11.2026: Każdy członek zespołu może zainicjować spotkanie. Inicjator z dostępem widzi wszystkie zadania w szczegółach swojego spotkania. Po usunięciu zadania znika ono u wszystkich. Jeżeli spotkanie usunięto przez przypadek, nagranie z chronionego dysku można ponownie zaimportować do upływu jego retencji.
-- DEC-13 · 22.11.2026: PM i przypisana osoba z dostępem mogą usunąć zadanie dla wszystkich po potwierdzeniu. Odebranie dostępu do spotkania odbiera dostęp do wszystkich jego zadań tej osobie.
+- DEC-11 · 24.11.2026: Meetly usuwa spotkania po 6 miesiącach kalendarzowych od zakończenia. Tylko uczestnik z listy „bot start” i z aktualnym dostępem może zmienić listę dostępu lub wcześniej usunąć spotkanie po potwierdzeniu. Usunięcie obejmuje wynik, zadania i historię ich zmian. Historia spotkań ma filtr słów, zakres dat i filtr wieku w dniach, tygodniach lub miesiącach.
+- DEC-12 · 24.11.2026: Każdy członek zespołu może zainicjować spotkanie. Inicjator z dostępem widzi wszystkie zadania w szczegółach swojego spotkania. Dopóki nagranie jest dostępne, jawny ponowny import może zlecić zweryfikowany uczestnik z listy „bot start”, który miał dostęp w chwili usunięcia spotkania. Nowy szkic trafia tylko do takich uczestników. Każdy z nich może go edytować i zatwierdzić. Ponowienie tego samego dostarczenia nie odtwarza usuniętego spotkania.
+- DEC-13 · 24.11.2026: PM i wykonawca mogą usunąć zadanie po potwierdzeniu. Dla zadania ze spotkania wykonawca operacji musi mieć aktualny dostęp do spotkania. Usunięcie obejmuje wszystkie widoki i historię zadania. Utrata skutecznego dostępu odbiera odczyt wszystkich zadań z danego spotkania.
 - A1: Inicjator informuje uczestników o nagrywaniu, transkrypcji i AI przed komendą „bot start”.
 - A2: Tytuł spotkania ma od 1 do 120 znaków. Źródło tytułu potwierdza Faza A.
 - A3: Gdy AI nie przypisze zadania pewnie do konta, tworzy temat do wyjaśnienia zamiast zadania bez właściciela — szczegół wykonawczy do F03.
@@ -323,9 +323,10 @@ Kierunek wyglądu opisuje [DESIGN.md](../DESIGN.md). Układ, nazwy i miejsca gł
 
 - Q1: W jaki sposób członek zespołu zgłasza usunięcie swoich danych? — blokuje: użycie prawdziwych danych — odpowiedź: właściciel projektu przed bramką prawdziwych danych.
 - Q2: Jak bot pozyskuje listę połączonych kont w docelowym Element i jak integracja wiąże spotkanie oraz inicjatora z Meetly? — do potwierdzenia w Fazie A.
+- Q5: Jak ma działać jawne odebranie dostępu, gdy osoba nadal ma przypisane zadanie z tego spotkania? — decyzja właściciela przed zatwierdzeniem polityk dostępu.
 - R1: Brakuje testu ścieżki z Element z użytkownikami. Nie wiadomo jeszcze, czy role i prezentacja wyników są zrozumiałe — ograniczenie: test na kilku członkach zespołu po demonstratorze.
 - R2: Integracja musi potwierdzić dostęp bota do zdarzeń połączenia i audio oraz usuwanie nagrań po 30 dniach — test z fikcyjnymi kontami w Fazie A.
-- R3: AI może pominąć decyzję lub przypisać zadanie niewłaściwej osobie — ograniczenie: inicjator sprawdza wynik, a niepewne przypisanie staje się tematem do wyjaśnienia.
+- R3: AI może pominąć decyzję lub przypisać zadanie niewłaściwej osobie — ograniczenie: zatwierdzający uczestnik sprawdza wynik, a niepewne przypisanie staje się tematem do wyjaśnienia.
 - R4: Użycie prawdziwych treści spotkań bez ustalenia zasad prywatności stwarza ryzyko dla zespołu — ograniczenie: bramka prawdziwych danych i P2.
 
 ## 13. Jak budować z tą specyfikacją
