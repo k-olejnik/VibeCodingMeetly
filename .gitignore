@@ -16,3 +16,6 @@ ehthumbs_vista.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
 /dane-prywatne/
+supabase/.branches/
+supabase/.temp/
+.meetly-private/

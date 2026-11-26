@@ -1,0 +1,118 @@
+.overview-nav button {
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-weight: 650;
+    cursor: pointer;
+}
+.overview-nav button:hover, .overview-nav button[aria-current="page"] { background: #e9eaff; color: var(--primary); }
+.demo-form, .demo-task-editor, .demo-form label:not(.demo-check), .form-grid label {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+}
+.demo-form { gap: 16px; margin: 16px 0; justify-items: start; }
+.demo-form > label, .demo-form > fieldset, .demo-form > .result-grid { width: 100%; }
+.demo-form textarea, .demo-form select, .form-grid select {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid #737d98;
+    border-radius: 10px;
+    background: white;
+    color: inherit;
+    font: inherit;
+    padding: 10px 12px;
+}
+.demo-form textarea { resize: vertical; field-sizing: content; }
+.demo-form fieldset { margin: 0; padding: 10px 14px; border: 1px solid var(--border); border-radius: 12px; }
+.demo-check { display: inline-flex; align-items: center; min-height: 44px; gap: 6px; margin-right: 16px; }
+.demo-check input { width: 18px; min-height: 18px; accent-color: var(--primary); }
+.demo-task-editor { margin: 12px 0; padding: 12px; border: 1px solid var(--border); border-radius: 12px; }
+.demo-task-editor .button { justify-self: start; }
+.task-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.form-grid { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; padding: 12px 0; }
+.meeting-filters { gap: 8px 10px; padding: 0 0 12px; }
+.meeting-filters label { gap: 4px; max-width: 100%; }
+.meeting-filters input, .meeting-filters select, .meeting-filters .button {
+    min-height: 44px;
+    padding: 7px 10px;
+    border-radius: 10px;
+}
+.meeting-filters input { width: 100%; }
+.meeting-filters .filter-query { flex: 1 1 220px; max-width: 260px; }
+.filter-date { width: 138px; }
+.filter-age { width: 88px; }
+.filter-unit { width: 114px; }
+.meeting-copy time { color: var(--muted); }
+.interactive-task { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.interactive-task > div:first-child { flex: 1 1 240px; }
+.task-meta { display: block; color: var(--muted); }
+.meeting-task-form { padding: 12px; border: 1px solid var(--border); border-radius: 12px; }
+.meeting-task-form h4, .transcript-dialog h3 { margin: 0; }
+.meeting-access-actions { margin-top: 12px; }
+.transcript-dialog {
+    width: min(640px, calc(100% - 32px));
+    max-height: min(720px, 85vh);
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: inherit;
+    background: #fff;
+    box-shadow: 0 12px 34px #232b5d30;
+}
+.transcript-dialog::backdrop { background: #171b3e80; }
+.transcript-dialog #transcript-excerpt { margin-top: 16px; overflow-wrap: anywhere; }
+.danger { background: #a33145; color: #fff; }
+.demo-subtitle { margin: 0 0 14px; }
+.demo-notice { margin-bottom: 14px; padding: 12px; }
+.inline-notice { margin-bottom: 12px; padding: 8px 12px; border-radius: 10px; color: #17624d; background: #e7f4ee; }
+.overview-task-group + .overview-task-group { margin-top: 12px; }
+.overview-task-group-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    min-height: 44px;
+    padding: 0 10px;
+    border-radius: 8px;
+    background: #f1efff;
+}
+.overview-task-group-heading h3 {
+    margin: 0;
+    min-width: 0;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+}
+.overview-task-group-heading time { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+.overview-meeting-link {
+    min-height: 44px;
+    padding: 4px 0;
+    color: var(--primary);
+    text-align: start;
+}
+.overview-meeting-link:hover { text-decoration: underline; }
+.overview-no-tasks { padding: 8px 0; }
+.overview-task-group .interactive-task { padding-block: 4px; gap: 4px 12px; }
+.overview-task-group .task-meta { font-size: .875rem; }
+.overview-task-group .task-actions .button { min-height: 44px; padding: 6px 10px; }
+.overview-overdue {
+    margin-top: 20px;
+    padding: 12px;
+    border: 1px solid #df98a5;
+    border-radius: 12px;
+    color: #8f2538;
+    background: #fff3f5;
+}
+.overview-overdue > h3 { margin: 0 0 8px; font-size: 1rem; }
+.overview-overdue .overview-task-group-heading { background: #fce4e9; }
+.overview-overdue .overview-meeting-link, .overview-overdue .task-meta, .overview-overdue time { color: inherit; }
+.overview-overdue .interactive-task { border-color: #efc5cd; }
+.demo-form :focus-visible, .form-grid :focus-visible, .overview-nav button:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+}
