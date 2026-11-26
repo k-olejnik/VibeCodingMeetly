@@ -212,10 +212,10 @@ function overviewTaskGroup(meeting, tasks) {
     const title = meeting.id ? button("detail",escape(meeting.title),meeting.id,"overview-meeting-link") : escape(meeting.title);
     return `<section class="overview-task-group"><div class="overview-task-group-heading"><h3>${title}</h3>
         ${start ? `<time datetime="${escape(start)}">${displayDate(start)}</time>` : ""}</div>
-        ${tasks.length ? taskList(tasks,{showContext:false}) : '<p class="overview-no-tasks">Brak otwartych zadań.</p>'}</section>`;
+        ${taskList(tasks,{showContext:false})}</section>`;
 }
 
-function overviewTasks(items, meetings, recent) {
+function overviewTasks(items, meetings) {
     const meetingByTask = new Map(meetings.flatMap(meeting => (meeting.tasks ?? []).map(task => [task.id, meeting.id])));
     const groups = new Map();
     for (const task of items) {
@@ -224,7 +224,8 @@ function overviewTasks(items, meetings, recent) {
         groups.get(meetingId).push(task);
     }
     const manual = {id:null,title:"Zadania ręczne"};
-    const latest = recent.map(meeting => overviewTaskGroup(meeting,groups.get(meeting.id) ?? [])).join("") +
+    const latest = meetings.filter(meeting => groups.has(meeting.id)).slice(0,5)
+        .map(meeting => overviewTaskGroup(meeting,groups.get(meeting.id))).join("") +
         (groups.has(null) ? overviewTaskGroup(manual,groups.get(null)) : "");
     const today = day();
     const overdue = [...meetings,manual].map(meeting => {
@@ -242,7 +243,7 @@ function overview() {
     const values = [["Spotkania",data.meetings.length],["Otwarte zadania",open.length],["Szkice do zatwierdzenia",data.drafts.length]];
     return `<div class="dashboard-top">${button("view","Import z Element","import","primary")}</div><section class="stats-grid">${values.map(([label,num])=>`<article class="stat-card"><p>${label}</p><strong>${num}</strong></article>`).join("")}</section>
         ${panel("Ostatnie spotkania",meetingRows(recent,{showTime:true}))}
-        ${panel("Najnowsze zadania",'<p id="open-tasks-notice" class="inline-notice" role="status" hidden></p>' + overviewTasks(open,meetings,recent))}`;
+        ${panel("Najnowsze zadania",'<p id="open-tasks-notice" class="inline-notice" role="status" hidden></p>' + overviewTasks(open,meetings))}`;
 }
 
 function ageLimit(count, unit) {

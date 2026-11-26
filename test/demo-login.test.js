@@ -135,7 +135,7 @@ test("Przegląd pokazuje pięć ostatnich spotkań z godziną i potwierdza zamkn
     assert.equal(notices["#notice"].hidden, true);
 });
 
-test("Najnowsze zadania pokazują pięć spotkań i wyróżniają otwarte zadania po terminie", async () => {
+test("Najnowsze zadania pomijają spotkania bez otwartych zadań i wyróżniają zaległości", async () => {
     const listeners = {};
     const app = { innerHTML: "", addEventListener: (name, handler) => { listeners[name] = handler; } };
     const tasks = [
@@ -146,14 +146,21 @@ test("Najnowsze zadania pokazują pięć spotkań i wyróżniają otwarte zadani
         { id: "e", text: "Zadanie na dziś", status: "open", due: "2026-11-26" },
         { id: "f", text: "Zadanie na jutro", status: "open", due: "2026-11-27" },
         { id: "g", text: "Przyszłe ze starszego spotkania", status: "open", due: "2026-11-30" },
+        { id: "h", text: "Sprawdź scenariusz", status: "open" },
+        { id: "i", text: "Uzupełnij plan", status: "open" },
+        { id: "j", text: "Przygotuj dane", status: "open" },
     ];
-    const meetings = Array.from({ length: 6 }, (_, index) => ({
-        id: `meeting-${index}`, title: `Spotkanie ${index}`, started: `2026-11-2${index}T09:00:00Z`,
+    const meetings = Array.from({ length: 8 }, (_, index) => ({
+        id: `meeting-${index}`, title: `Spotkanie ${index}`, started: `2026-11-${18 + index}T09:00:00Z`,
         summary: `Skrót ${index}`, decisions: [], questions: [], tasks: [],
     }));
     meetings[0].tasks = [tasks[0], tasks[6]];
+    meetings[1].tasks = [tasks[7]];
+    meetings[2].tasks = [tasks[8]];
+    meetings[3].tasks = [tasks[9]];
     meetings[4].tasks = [tasks[5]];
-    meetings[5].tasks = [tasks[2], tasks[3], tasks[4]];
+    meetings[5].tasks = [tasks[3]];
+    meetings[7].tasks = [tasks[2], tasks[4]];
     const fixture = {
         profile: { name: "PM A", role: "pm" }, drafts: [], tasks, meetings,
     };
@@ -166,7 +173,7 @@ test("Najnowsze zadania pokazują pięć spotkań i wyróżniają otwarte zadani
     const markup = runInContext("data = fixture; overview()", context);
     const [latest, overdue] = markup.split("<h2>Najnowsze zadania</h2>")[1].split('<section class="overview-overdue"');
     const meetingLinks = [...latest.matchAll(/data-action="detail" data-id="meeting-(\d)">Spotkanie \d<\/button>/g)];
-    assert.deepEqual(meetingLinks.map(match => match[1]), ["5", "4", "3", "2", "1"]);
+    assert.deepEqual(meetingLinks.map(match => match[1]), ["7", "4", "3", "2", "1"]);
     assert.match(latest, /<time datetime="2026-11-25T09:00:00Z">25 lis 2026<\/time>/);
     assert.match(latest, /<strong>Zadanie na dziś<\/strong>/);
     assert.match(latest, /<strong>Zadanie ręczne<\/strong>/);
@@ -176,9 +183,9 @@ test("Najnowsze zadania pokazują pięć spotkań i wyróżniają otwarte zadani
     assert.doesNotMatch(markup, /Zadanie zamknięte|Przyszłe ze starszego spotkania|data-action="task-detail"/);
 
     context.api = async () => fixture;
-    const control = { dataset: {action:"detail", id:"meeting-5"} };
+    const control = { dataset: {action:"detail", id:"meeting-7"} };
     listeners.click({ target: { closest: () => control } });
     await new Promise(resolve => setImmediate(resolve));
     assert.match(app.innerHTML, /<h1>Wynik spotkania<\/h1>/);
-    assert.match(app.innerHTML, /Skrót 5/);
+    assert.match(app.innerHTML, /Skrót 7/);
 });

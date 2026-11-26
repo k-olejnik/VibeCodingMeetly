@@ -5,7 +5,7 @@ Meetly pomaga małemu zespołowi programistycznemu zamieniać ustalenia ze spotk
 ## Wypróbuj
 
 - [Otwórz działające Meetly Demo](https://meetly-demo-testy.kkszczak.chatgpt.site/). Do logowania użyj fikcyjnego konta przekazanego przez właściciela.
-- W **Przeglądzie** sekcja **Najnowsze zadania** pokazuje zadania z pięciu ostatnich spotkań. Nazwa otwiera wynik spotkania, a data jest po prawej. Sekcja **Po terminie** zbiera otwarte zaległości także ze starszych spotkań.
+- W **Przeglądzie** sekcja **Najnowsze zadania** pokazuje do pięciu najnowszych spotkań z otwartymi zadaniami. Nazwa otwiera wynik spotkania, a data jest po prawej. Sekcja **Po terminie** zbiera otwarte zaległości także ze starszych spotkań.
 - W zatwierdzonym spotkaniu PM z dostępem może dodać otwarte zadanie oraz edytować treść, wykonawcę i termin. Pokaz używa fikcyjnych danych oraz symulacji Element i AI.
 
 1. Po otwarciu prototypu zobaczysz **Przegląd** na koncie **PM A**. W zakładce **Spotkania** są dwa zatwierdzone spotkania o nowej bazie klientów: „Wymagania i wygląd ekranów” oraz „Struktura tabel i migracja”. Ich osiem zadań jest dostępnych w zakładce **Zadania**.

@@ -96,7 +96,6 @@
     text-align: start;
 }
 .overview-meeting-link:hover { text-decoration: underline; }
-.overview-no-tasks { padding: 8px 0; }
 .overview-task-group .interactive-task { padding-block: 4px; gap: 4px 12px; }
 .overview-task-group .task-meta { font-size: .875rem; }
 .overview-task-group .task-actions .button { min-height: 44px; padding: 6px 10px; }
